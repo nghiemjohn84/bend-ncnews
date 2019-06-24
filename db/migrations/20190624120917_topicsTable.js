@@ -1,5 +1,6 @@
 
 exports.up = function(connection, Promise) {
+    console.log('creating topics table...')
     return connection.schema.createTable('topics', (topicsTable) => {
         topicsTable.string('slug').primary()
         topicsTable.string('description').notNullable();

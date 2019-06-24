@@ -1,5 +1,6 @@
 
 exports.up = function(connection, Promise) {
+    console.log('creating comments table...')
     return connection.schema.createTable('comments', (commentsTable) => {
         commentsTable.increments('comment_id')
         commentsTable.string('author').references('users.username')
