@@ -1,14 +1,14 @@
 
 exports.up = function(connection, Promise) {
     console.log('creating articles table...')
-    return connection.schema.createTable('articles', (articles_table) => {
-        articles_table.increments('article_id').primary();
-        articles_table.string('title').notNullable();
-        articles_table.string('topic').references('topics.slug')
-        articles_table.string('author').references('users.username')
-        articles_table.string('body').notNullable();
-        articles_table.timestamps('created_at')
-        articles_table.integer('votes').defaultTo(0)
+    return connection.schema.createTable('articles', (articlesTable) => {
+        articlesTable.increments('article_id').primary();
+        articlesTable.string('title').notNullable();
+        articlesTable.string('topic').references('topics.slug')
+        articlesTable.string('author').references('users.username')
+        articlesTable.string('body').notNullable();
+        articlesTable.timestamps('created_at')
+        articlesTable.integer('votes').defaultTo(0)
     });
 };
 
