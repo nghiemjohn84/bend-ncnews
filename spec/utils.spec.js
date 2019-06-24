@@ -3,13 +3,13 @@ const { formatDate, makeRefObj, formatComments } = require('../db/utils/utils');
 
 describe('formatDate', () => {
     it('returns an empty array when an empty array is passed', () => {
-        expect(formatDate([])).to.eql([])
+        expect(formatDate([])).to.eql([]);
     });
     it('returns the converted timestamp date and created_at key when just one key is passed', () => {
-        const input = [{created_at: 1471522072389}]
-        const actual = formatDate(input)
-        const expected = [{created_at: '8/18/2016, 1:07:52 PM'}]
-        expect(actual).to.eql(expected)
+        const input = [{created_at: 1471522072389}];
+        const actual = formatDate(input);
+        const expected = [{created_at: '8/18/2016, 1:07:52 PM'}];
+        expect(actual).to.eql(expected);
     })
     it('returns the converted timestamp date and created_at key when an item with multiple keys is passed', () => {
         const input = [{
@@ -18,14 +18,14 @@ describe('formatDate', () => {
                 author: 'jessjelly',
                 created_at: 1471522072389
             }]
-        const actual = formatDate(input)
+        const actual = formatDate(input);
         const expected = [{
                 title: 'Running a Node App',
                 topic: 'coding',
                 author: 'jessjelly',
                 created_at: '8/18/2016, 1:07:52 PM'
-            }]
-        expect(actual).to.eql(expected)
+            }];
+        expect(actual).to.eql(expected);
     }); 
     it('returns the converted timestamp date and created_at key when more than one object with multiple keys are passed', () => {
         const input = [{
@@ -49,7 +49,7 @@ describe('formatDate', () => {
                 created_at: 1500584273256
               }
         ]
-        const actual = formatDate(input)
+        const actual = formatDate(input);
         const expected = [{
                 title: 'Running a Node App',
                 topic: 'coding',
@@ -70,17 +70,34 @@ describe('formatDate', () => {
                 author: 'jessjelly',
                 created_at: '7/20/2017, 9:57:53 PM'
               }]
-        expect(actual).to.eql(expected)
+        expect(actual).to.eql(expected);
     });
 
 });
 
 describe('makeRefObj', () => {
-    it('returns an empty object when an empty array is passed')
-    const input = []
-    const actual = makeRefObj(input)
-    const expected = ({})
-    expect(actual).to.eql(expected)
+    it('returns an empty object when an empty array is passed', () => {
+        const input = [];
+        const actual = (makeRefObj(input));
+        const expected = ({});
+        expect(actual).to.eql(expected);
+    });
+    it('returns an object with one key value pair when one object with two key value pairs is passed', () => {
+        const input = [{article_id: 1, title: 'A'}]
+        const actual = (makeRefObj(input));
+        const expected = ({A: 1});
+        expect(actual).to.eql(expected);
+    });
+    it('returns an object with key value pairs when multiple objects are passed', () => {
+        const input = [
+            {article_id: 1, title: 'A'},
+            {article_id: 2, title: 'B'},
+            {article_id: 3, title: 'C'}
+        ]
+        const actual = (makeRefObj(input));
+        const expected = ({A: 1, B: 2, C: 3});
+        expect(actual).to.eql(expected);
+    });
 });
 
 describe('formatComments', () => {});

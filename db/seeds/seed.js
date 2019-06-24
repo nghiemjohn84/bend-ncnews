@@ -3,35 +3,40 @@ const {
   articleData,
   commentData,
   userData
-} = require('../index.js');
+} = require("../index.js");
 
-const { formatDate, formatComments, makeRefObj } = require('../utils/utils');
+const { formatDate, formatComments, makeRefObj } = require("../utils/utils");
 
 exports.seed = function(connection, Promise) {
   return connection.migrate
     .rollback()
     .then(() => {
-    return connection.migrate.latest()})
+      return connection.migrate.latest();
+    })
     .then(() => {
-  const topicsInsertions = connection('topics')
-    .insert(topicData)
-    .returning('*')
-  const usersInsertions = connection('users')
-    .insert(userData)
-    .returning('*')
-  return Promise.all([topicsInsertions, usersInsertions])
-  //   .then(([mystery, mystery2]) => {
-  //     console.log(mystery, mystery2)
-  // })
-  .then (() => {
-    console.log(articleData,  '<-----articleData')
-    const changedDate = formatDate(articleData)
-    console.log(changedDate, '<---- changedDate')
-    return connection
-      .insert(changedDate)
-      .into('articles')
-  })
-  
+      const topicsInsertions = connection("topics")
+        .insert(topicData)
+        .returning("*");
+      const usersInsertions = connection("users")
+        .insert(userData)
+        .returning("*");
+      return (
+        Promise.all([topicsInsertions, usersInsertions])
+          //   .then(([mystery, mystery2]) => {
+          //     console.log(mystery, mystery2)
+          // })
+          .then(() => {
+            console.log(articleData, "<-----articleData");
+            console.log();
+            const changedDate = formatDate(articleData);
+            console.log(changedDate, "<---- changedDate");
+            return connection
+              .insert(changedDate)
+              .into("articles")
+              .returning("*");
+          })
+      );
+
       /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 
@@ -53,6 +58,6 @@ exports.seed = function(connection, Promise) {
 
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
-      return connection('comments').insert(formattedComments);
+      return connection("comments").insert(formattedComments);
     });
 };
