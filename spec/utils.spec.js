@@ -75,10 +75,12 @@ describe('formatDate', () => {
 
 });
 
-describe('makeRefObj', () => {});
-
-describe('formatComments', () => {});
-
-describe('makeRefObj', () => {});
+describe('makeRefObj', () => {
+    it('returns an empty object when an empty array is passed')
+    const input = []
+    const actual = makeRefObj(input)
+    const expected = ({})
+    expect(actual).to.eql(expected)
+});
 
 describe('formatComments', () => {});

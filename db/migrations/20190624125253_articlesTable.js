@@ -6,8 +6,8 @@ exports.up = function(connection, Promise) {
         articlesTable.string('title').notNullable();
         articlesTable.string('topic').references('topics.slug')
         articlesTable.string('author').references('users.username')
-        articlesTable.string('body').notNullable();
-        articlesTable.timestamps('created_at')
+        articlesTable.text('body').notNullable();
+        articlesTable.string('created_at')
         articlesTable.integer('votes').defaultTo(0)
     });
 };

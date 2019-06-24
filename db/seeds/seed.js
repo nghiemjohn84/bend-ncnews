@@ -9,18 +9,29 @@ const { formatDate, formatComments, makeRefObj } = require('../utils/utils');
 
 exports.seed = function(connection, Promise) {
   return connection.migrate
-  .rollback()
-  .then(() => connection.migrate.latest())
-  .then(() => {
-    return connection('articles')
-    .insert(articleData)
-  })
-
-  const topicsInsertions = connection('topics').insert(topicData);
-  const usersInsertions = connection('users').insert(userData);
-
-  return Promise.all([topicsInsertions, usersInsertions])
+    .rollback()
     .then(() => {
+    return connection.migrate.latest()})
+    .then(() => {
+  const topicsInsertions = connection('topics')
+    .insert(topicData)
+    .returning('*')
+  const usersInsertions = connection('users')
+    .insert(userData)
+    .returning('*')
+  return Promise.all([topicsInsertions, usersInsertions])
+  //   .then(([mystery, mystery2]) => {
+  //     console.log(mystery, mystery2)
+  // })
+  .then (() => {
+    console.log(articleData,  '<-----articleData')
+    const changedDate = formatDate(articleData)
+    console.log(changedDate, '<---- changedDate')
+    return connection
+      .insert(changedDate)
+      .into('articles')
+  })
+  
       /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 
