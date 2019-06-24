@@ -8,6 +8,13 @@ const {
 const { formatDate, formatComments, makeRefObj } = require('../utils/utils');
 
 exports.seed = function(connection, Promise) {
+  return connection.migrate
+  .rollback()
+  .then(() => connection.migrate.latest())
+  .then(() => {
+    return connection('articles')
+    .insert(articleData)
+  })
 
   const topicsInsertions = connection('topics').insert(topicData);
   const usersInsertions = connection('users').insert(userData);

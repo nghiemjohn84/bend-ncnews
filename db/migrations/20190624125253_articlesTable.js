@@ -4,11 +4,11 @@ exports.up = function(connection, Promise) {
     return connection.schema.createTable('articles', (articles_table) => {
         articles_table.increments('article_id').primary();
         articles_table.string('title').notNullable();
-        articles_table.string('topic').notNullable();
-        articles_table.string('author').notNullable();
+        articles_table.string('topic').references('topics.slug')
+        articles_table.string('author').references('users.username')
         articles_table.string('body').notNullable();
-        articles_table.decimal('created_at').notNullable();
-        articles_table.decimal('votes');
+        articles_table.timestamps('created_at')
+        articles_table.integer('votes').defaultTo(0)
     });
 };
 
