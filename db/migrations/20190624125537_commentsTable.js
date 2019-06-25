@@ -1,6 +1,5 @@
 
 exports.up = function(connection, Promise) {
-    console.log('creating comments table...')
     return connection.schema.createTable('comments', (commentsTable) => {
         commentsTable.increments('comment_id')
         commentsTable.string('author').references('users.username')
@@ -13,6 +12,5 @@ exports.up = function(connection, Promise) {
 };
 
 exports.down = function(connection, Promise) {
-    console.log('removing users tables...')
     return connection.schema.dropTable('comments')
 };

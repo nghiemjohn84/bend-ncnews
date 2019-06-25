@@ -20,7 +20,14 @@ describe.only('/', () => {
                     expect(res.body.topics[0]).to.contain.keys('slug', 'description')
                     })
                 })
-            
+            it('GET: status code 404 when an invalid route is passed', () => {
+                return request(app)
+                .get('/api/topics/invalid')
+                .expect(404)
+                .then (res => {
+                    expect(res.body.msg).to.equal('Route not found')
+                })
+                })
+            })
         })
     })
-})
