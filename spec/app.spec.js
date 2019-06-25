@@ -1,4 +1,4 @@
-process.env.NODE.ENV = 'test';
+process.env.NODE_ENV = 'test';
 const app = require('../app');
 const request = require('supertest');
 const connection = require('../db/connection');
@@ -27,7 +27,27 @@ describe.only('/', () => {
                 .then (res => {
                     expect(res.body.msg).to.equal('Route not found')
                 })
+            })
+        })
+        describe('/users', () => {
+            describe('/users/:username', () => {
+                it('GET: status code 200 and responds with a single item object containing a specfied username', () => {
+                    return request(app)
+                    .get('/api/users/rogersop')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.user.username).to.equal('rogersop')
+                        expect(res.body.user).to.contain.keys(
+                            'username',
+                            'avatar_url',
+                            'name')
+                    })
+                })
+                it('GET: status code 404 when user enters a username that is not found', () => {
+                    return request(app)
+                    .get('/api/users/bob')
                 })
             })
         })
     })
+})
