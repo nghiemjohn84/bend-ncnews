@@ -45,7 +45,11 @@ describe.only('/', () => {
                 })
                 it('GET: status code 404 when user enters a username that is not found', () => {
                     return request(app)
-                    .get('/api/users/bob')
+                    .get('/api/users/bobby')
+                    .expect(404)
+                    .then(res => {
+                        expect(res.body.msg).to.equal(`Username bobby not found`)
+                    })
                 })
             })
         })
