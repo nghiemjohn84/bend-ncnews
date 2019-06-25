@@ -1,7 +1,7 @@
 exports.formatDate = list => {
   return list.map(obj => {
     const newObj = { ...obj };
-    const newDate = new Date(obj.created_at).toLocaleString();
+    const newDate = new Date(obj.created_at);
     newObj.created_at = newDate;
     return newObj;
   });
@@ -17,7 +17,7 @@ exports.makeRefObj = list => {
 
 exports.formatComments = (comments, articleRef) => {
   return comments.map(comment => {
-    comment.created_at = new Date(comment.created_at).toLocaleString();
+    comment.created_at = new Date(comment.created_at);
     const { belongs_to, created_by, ...restOfComments } = comment;
     const author = comment.created_by;
     const article_id = articleRef[belongs_to];

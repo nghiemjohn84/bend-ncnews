@@ -8,7 +8,7 @@ describe("formatDate", () => {
   it("returns the converted timestamp date and created_at key when just one key is passed", () => {
     const input = [{ created_at: 1471522072389 }];
     const actual = formatDate(input);
-    const expected = [{ created_at: new Date(1471522072389).toLocaleString() }];
+    const expected = [{ created_at: new Date(1471522072389)}];
     expect(actual).to.eql(expected);
   });
   it("returns the converted timestamp date and created_at key when an item with multiple keys is passed", () => {
@@ -26,7 +26,7 @@ describe("formatDate", () => {
         title: "Running a Node App",
         topic: "coding",
         author: "jessjelly",
-        created_at: new Date(1471522072389).toLocaleString()
+        created_at: new Date(1471522072389)
       }
     ];
     expect(actual).to.eql(expected);
@@ -61,7 +61,7 @@ describe("formatDate", () => {
         title: "Running a Node App",
         topic: "coding",
         author: "jessjelly",
-        created_at: new Date(1471522072389).toLocaleString()
+        created_at: new Date(1471522072389)
       },
       {
         body:
@@ -69,14 +69,14 @@ describe("formatDate", () => {
         belongs_to: "They're not exactly dogs, are they?",
         created_by: "butter_bridge",
         votes: 16,
-        created_at: new Date(1511354163389).toLocaleString()
+        created_at: new Date(1511354163389)
       },
       {
         title:
           "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
         topic: "coding",
         author: "jessjelly",
-        created_at: new Date(1500584273256).toLocaleString()
+        created_at: new Date(1500584273256)
       }
     ];
     expect(actual).to.eql(expected);
@@ -130,7 +130,7 @@ describe("formatComments", () => {
       {
         author: "butter_bridge",
         article_id: 1,
-        created_at: new Date(1511354163389).toLocaleString()
+        created_at: new Date(1511354163389)
       }
     ];
     expect(actual).to.eql(expected);
@@ -175,7 +175,7 @@ describe("formatComments", () => {
         votes: 16,
         author: "butter_bridge",
         article_id: 1,
-        created_at: new Date(1511354163389).toLocaleString()
+        created_at: new Date(1511354163389)
       },
       {
         body:
@@ -183,7 +183,7 @@ describe("formatComments", () => {
         votes: 14,
         author: "butter_bridge",
         article_id: 2,
-        created_at: new Date(1479818163389).toLocaleString()
+        created_at: new Date(1479818163389)
       },
       {
         body:
@@ -191,7 +191,7 @@ describe("formatComments", () => {
         votes: 16,
         author: "icellusedkars",
         article_id: 3,
-        created_at: new Date(1101386163389).toLocaleString()
+        created_at: new Date(1101386163389)
       }
     ];
     expect(actual).to.eql(expected);

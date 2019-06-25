@@ -22,17 +22,14 @@ exports.seed = function(connection, Promise) {
         .returning("*");
       return Promise.all([topicsInsertions, usersInsertions])
         .then(() => {
-          const changedDate = formatDate(articleData);
-          console.log(changedDate[1], '<===== ARTICLE DATA')
+          const changedDate = formatDate(articleData)
           return connection
             .insert(changedDate)
             .into(('articles'))
             .returning("*")
         .then(articleRows => {
           const articleRef = makeRefObj(articleRows);
-          console.log(articleRef, "<-----article Ref")
           const formattedComments = formatComments(commentData, articleRef);
-          console.log(formattedComments[2], '<---formatted comments')
           return connection
           .insert(formattedComments)
           .into('comments')
