@@ -22,5 +22,5 @@ exports.updateArticleVote = (req, res, next) => {
   addVoteToArticle(article_id, increment).then((article) => {
     res.status(201).send({ article })
   })
-  .catch(next);
+  .catch(next)
 }

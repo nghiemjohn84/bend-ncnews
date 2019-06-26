@@ -64,14 +64,6 @@ describe.only('/', () => {
                 expect(res.body.articles[0]).to.contain.keys('article_id', 'title', 'author', 'body', 'created_at', 'votes')
             })
         })
-        // it('GET: status code 404 when an invalid route is passed', () => {
-        //     return request(app)
-        //     .get('/api/articles/invalid')
-        //     .expect(404)
-        //     .then (res => {
-        //         expect(res.body.msg).to.equal('Route not found')
-        //     })
-        // })
     })
     describe('/:article_id', () => {
         it('GET: status code 200 and returns an object of the single object based on its ID', () => {
@@ -101,13 +93,21 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('article 999 not found');
           });
       });
+      it('GET: status code 400 when an invalid id (not a number) is passed for article_id', () => {
+        return request(app)
+        .get('/api/articles/invalid')
+        .expect(400)
+        .then (res => {
+            expect(res.body.msg).to.equal('Invalid Input')
+        })
+    })
       it('PATCH: status code 201 and responds with the article with the updated vote count', () => {
           return request(app)
           .patch('/api/articles/1')
-          .send({inc_votes: 10})
+          .send({inc_votes: -10})
           .expect(201)
           .then(res => {
-              expect(res.body.article.votes).to.equal(110)
+              expect(res.body.article.votes).to.equal(90)
               expect(res.body.article).to.contain.keys(
                 'article_id',
                 'title',
@@ -119,5 +119,14 @@ describe.only('/', () => {
             )
           });
       });
+      it('PATCH: returns status 400 when an invalid request has been made for the vote count', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({inc_votes: 'cat'})
+        .expect(400)
+        .then(res => {
+          expect(res.body.msg).to.equal('Invalid Input');
+        });
+      })
     });
 }) ;

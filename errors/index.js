@@ -10,3 +10,12 @@ exports.handleServerErrors = (err, req, res, next) => {
 exports.routeNotFoundError = (req, res, next) => {
     res.status(404).send({ msg: 'Route not found' })
 }
+
+exports.handleSqlErrors = (err, req, res, next) => {
+    const sqlErrorCodes = { 
+        '22P02': 'Invalid Input'
+    };
+    if(sqlErrorCodes[err.code]){
+    res.status(400).send({msg: sqlErrorCodes[err.code]})
+    } else next(err)
+}

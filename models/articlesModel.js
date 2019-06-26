@@ -23,15 +23,17 @@ exports.fetchArticleById = article_id => {
 };
 
 exports.addVoteToArticle = (article_id, increment) => {
-  console.log('Models!')
   return connection
-    .first('*')
+    .returning('*')
     .from('articles')
     .where('article_id', article_id)
     .increment({votes: increment})
-    .returning('*')
-    .then(([article]) => article)
-
-
-
+    .then(([article]) => {
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `Invalid Request`
+        });
+      } else return article;
+    });
 }
