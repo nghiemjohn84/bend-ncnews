@@ -6,8 +6,19 @@ const chai = require('chai');
 const { expect } = chai;
 
 describe.only('/', () => {
-  after(() => connection.destroy());
+  after(() => connection.destroy()); 
   beforeEach(() => connection.seed.run());
+
+  describe('/', () => {
+    it('GET: status code 404 when an invalid route is unavailable', () => {
+      return request(app)
+        .get('/invalidRoute')
+        .expect(404)
+        .then(res => {
+          expect(res.body.msg).to.equal('Route Not Found!')
+        })
+    })
+  })
 
   describe('/api', () => {
     describe('/topics', () => {
@@ -22,10 +33,10 @@ describe.only('/', () => {
       });
       it('GET: status code 404 when an invalid route is passed', () => {
         return request(app)
-          .get('/api/topics/invalid')
+          .get('/api/topics/invalidRoute')
           .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal('Route not found');
+            expect(res.body.msg).to.equal('Route Not Found!');
           });
       });
       it('Invalid Method: status code 405', () => {
