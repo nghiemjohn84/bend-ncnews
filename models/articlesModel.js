@@ -52,3 +52,12 @@ exports.addCommentByArticleId = (article_id, username, body) => {
       } else return comment;
     });
 };
+
+exports.fetchCommentsByArticleId = (article_id) => {
+  return connection
+    .select('*')
+    .from('comments')
+    .where('article_id', article_id)
+    .returning('*')
+    .then((comment) => comment)
+}

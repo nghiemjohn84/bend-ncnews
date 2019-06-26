@@ -3,7 +3,8 @@ const {
     sendAllArticles,
     sendArticleById,
     updateArticleVote,
-    postCommentByArticleId
+    postCommentByArticleId,
+    sendCommentsByArticleId
 } = require('../controllers/articlesController')
 
 const {handleMethodErrors} = require('../errors/index')
@@ -19,6 +20,7 @@ articlesRouter.route('/:article_id')
 
 articlesRouter.route('/:article_id/comments')
     .post(postCommentByArticleId)
+    .get(sendCommentsByArticleId)
 
 
 

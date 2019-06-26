@@ -215,7 +215,7 @@ describe.only('/', () => {
         return Promise.all(methodPromise);
       });
     });
-    describe('/:article_id/comments', () => {
+    describe.only('/:article_id/comments', () => {
       it('POST: status code 201 and responds with the posted comment based on the article_id', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -230,39 +230,49 @@ describe.only('/', () => {
       it('POST: status code 400 when invalid article id is used', () => {
         return request(app)
           .post('/api/articles/999/comments')
-          .send({username: 'rogersop', body: 'Hello, this is a test'})
+          .send({ username: 'rogersop', body: 'Hello, this is a test' })
           .expect(400)
           .then(res => {
-            expect(res.body.msg).to.equal('Invalid Request')
-          })
-      })
+            expect(res.body.msg).to.equal('Invalid Request');
+          });
+      });
       it('POST: status code 400 when invalid username is used', () => {
         return request(app)
           .post('/api/articles/1/comments')
-          .send({username: 'bobby', body: 'Hello, this is a test'})
+          .send({ username: 'bobby', body: 'Hello, this is a test' })
           .expect(400)
           .then(res => {
-            expect(res.body.msg).to.equal('Invalid Request')
+            expect(res.body.msg).to.equal('Invalid Request');
+          });
+      });
+      it('POST: status code 400 when no comment body has been provided', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ username: 'rogersop' })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Missing Required Information');
+          });
+      });
+      it('POST: status code 400 when no username has been provided', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ body: 'Hello, this is a test' })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Username Required');
+          });
+      });
+      it('GET: status code 200 and responds an array of comments for a given article ID', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment[0].article_id).to.equal(1)
+            expect(res.body.comment.length).to.equal(13)
+            expect(res.body.comment[0]).to.contain.keys('comment_id', 'author', 'created_at', 'votes', 'body')
           })
-        })
-        it('POST: status code 400 when no comment body has been provided', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({username: 'rogersop'})
-            .expect(400)
-            .then(res => {
-              expect(res.body.msg).to.equal('Missing Required Information')
-            })
-          })
-          it('POST: status code 400 when no username has been provided', () => {
-            return request(app)
-              .post('/api/articles/1/comments')
-              .send({body: 'Hello, this is a test'})
-              .expect(400)
-              .then(res => {
-                expect(res.body.msg).to.equal('Username Required')
-              });
-            });
+      });
     });
   });
 });
