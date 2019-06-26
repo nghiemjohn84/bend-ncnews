@@ -6,7 +6,7 @@ exports.up = function(connection, Promise) {
         articlesTable.string('topic').references('topics.slug')
         articlesTable.string('author').references('users.username')
         articlesTable.text('body').notNullable();
-        articlesTable.string('created_at')
+        articlesTable.timestamp('created_at').defaultTo(connection.fn.now())
         articlesTable.integer('votes').defaultTo(0)
     });
 };
