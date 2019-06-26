@@ -1,4 +1,4 @@
-const { fetchAllArticles, fetchArticleById } = require('../models/articlesModel');
+const { fetchAllArticles, fetchArticleById, addVoteToArticle } = require('../models/articlesModel');
 
 exports.sendAllArticles = (req, res, next) => {
   fetchAllArticles()
@@ -15,3 +15,12 @@ exports.sendArticleById = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.updateArticleVote = (req, res, next) => {
+  const increment = req.body.inc_votes;
+  const {article_id} = req.params;
+  addVoteToArticle(article_id, increment).then((article) => {
+    res.status(201).send({ article })
+  })
+  .catch(next);
+}

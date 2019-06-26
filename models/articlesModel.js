@@ -21,3 +21,17 @@ exports.fetchArticleById = article_id => {
       } else return article;
     });
 };
+
+exports.addVoteToArticle = (article_id, increment) => {
+  console.log('Models!')
+  return connection
+    .first('*')
+    .from('articles')
+    .where('article_id', article_id)
+    .increment({votes: increment})
+    .returning('*')
+    .then(([article]) => article)
+
+
+
+}

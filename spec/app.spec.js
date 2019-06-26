@@ -101,5 +101,23 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('article 999 not found');
           });
       });
-    })
-}) 
+      it('PATCH: status code 201 and responds with the article with the updated vote count', () => {
+          return request(app)
+          .patch('/api/articles/1')
+          .send({inc_votes: 10})
+          .expect(201)
+          .then(res => {
+              expect(res.body.article.votes).to.equal(110)
+              expect(res.body.article).to.contain.keys(
+                'article_id',
+                'title',
+                'topic',
+                'author',
+                'body',
+                'created_at',
+                'votes',
+            )
+          });
+      });
+    });
+}) ;
