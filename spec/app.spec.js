@@ -173,7 +173,7 @@ describe.only('/', () => {
               'created_at',
               'votes'
             );
-          }); 
+          });
       });
       it('PATCH: status code 201 and responds with the article with a decremented vote count', () => {
         return request(app)
@@ -182,7 +182,7 @@ describe.only('/', () => {
           .expect(201)
           .then(res => {
             expect(res.body.article.votes).to.equal(90);
-          }); 
+          });
       });
       it('PATCH: status 400 when an invalid request has been made for the vote count', () => {
         return request(app)
@@ -196,7 +196,7 @@ describe.only('/', () => {
       it('PATCH: status 400 when no value has been provided for the vote count', () => {
         return request(app)
           .patch('/api/articles/1')
-          .send({ inc_votes: 0})
+          .send({ inc_votes: 0 })
           .expect(400)
           .then(res => {
             expect(res.body.msg).to.equal('Vote Count Value Required');
@@ -213,6 +213,19 @@ describe.only('/', () => {
             });
         });
         return Promise.all(methodPromise);
+      });
+    });
+    describe('/:article_id/comments', () => {
+      it('POST: status code 201 and responds with the posted comment based on the article_id', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ username: 'rogersop', body: 'Hello, this is a test' })
+          .expect(201)
+          .then(res => {
+            expect(res.body.comment.author).to.equal('rogersop');
+            expect(res.body.comment.article_id).to.equal(1);
+            expect(res.body.comment.body).to.equal('Hello, this is a test');
+          });
       });
     });
   });

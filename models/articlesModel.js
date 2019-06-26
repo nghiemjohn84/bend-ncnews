@@ -27,7 +27,7 @@ exports.addVoteToArticle = (article_id, increment) => {
     .returning('*')
     .from('articles')
     .where('article_id', article_id)
-    .increment({votes: increment})
+    .increment({ votes: increment })
     .then(([article]) => {
       if (!increment) {
         return Promise.reject({
@@ -36,4 +36,14 @@ exports.addVoteToArticle = (article_id, increment) => {
         });
       } else return article;
     });
-}
+};
+
+exports.addCommentByArticleId = (article_id, username, body) => {
+  return connection
+    .insert({ article_id: article_id, author: username, body: body })
+    .into('comments')
+    .returning('*')
+    .then(([comment]) => {
+      return comment;
+    });
+};
