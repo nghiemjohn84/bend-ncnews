@@ -53,11 +53,14 @@ exports.addCommentByArticleId = (article_id, username, body) => {
     });
 };
 
-exports.fetchCommentsByArticleId = (article_id) => {
+exports.fetchCommentsByArticleId = (article_id, sort_by = 'created_at', order = 'desc') => {
   return connection
     .select('*')
     .from('comments')
     .where('article_id', article_id)
     .returning('*')
-    .then((comment) => comment)
+    .orderBy(sort_by, order)
+    // .then(comments => {
+    //   return (comments)
+    // })
 }

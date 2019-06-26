@@ -4,6 +4,9 @@ const request = require('supertest');
 const connection = require('../db/connection');
 const chai = require('chai');
 const { expect } = chai;
+const chaiSorted = require('chai-sorted')
+chai.use(chaiSorted)
+
 
 describe.only('/', () => {
   after(() => connection.destroy());
@@ -263,7 +266,7 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('Username Required');
           });
       });
-      it('GET: status code 200 and responds an array of comments for a given article ID', () => {
+      it('GET: status code 200 and responds with an array of comments for a given article ID', () => {
         return request(app)
           .get('/api/articles/1/comments')
           .expect(200)
@@ -272,7 +275,23 @@ describe.only('/', () => {
             expect(res.body.comment.length).to.equal(13)
             expect(res.body.comment[0]).to.contain.keys('comment_id', 'author', 'created_at', 'votes', 'body')
           })
-      });
+      })
+      it('GET: status code 200 and responds with an array of comments for a given article ID sorted by created_at in descending order by default', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment).to.be.descendingBy('created_at')
+          })
+      })
+      it('GET: status code 200 and responds with an array of comments for a given article ID sorted by comment_id in ascending order', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=comment_id&&order=asc')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment).to.be.sortedBy('comment_id')
+          })
+        })
     });
   });
 });
