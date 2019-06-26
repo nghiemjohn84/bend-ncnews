@@ -19,3 +19,7 @@ exports.handleSqlErrors = (err, req, res, next) => {
     res.status(400).send({msg: sqlErrorCodes[err.code]})
     } else next(err)
 }
+
+exports.handleMethodErrors = (req, res, next) => {
+    res.status(405).send({msg: 'Method Not Allowed'})
+}

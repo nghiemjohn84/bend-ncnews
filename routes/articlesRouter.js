@@ -5,9 +5,14 @@ const {
     updateArticleVote
 } = require('../controllers/articlesController')
 
-articlesRouter.route('/').get(sendAllArticles)
+const {handleMethodErrors} = require('../errors/index')
 
-articlesRouter.route('/:article_id').get(sendArticleById).patch(updateArticleVote)
+articlesRouter.route('/').get(sendAllArticles).all(handleMethodErrors)
+
+articlesRouter.route('/:article_id')
+    .get(sendArticleById)
+    .patch(updateArticleVote)
+    .all(handleMethodErrors)
 
 
 

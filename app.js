@@ -5,7 +5,7 @@ const {
     handleCustomErrors, 
     handleServerErrors,
     routeNotFoundError,
-    handleSqlErrors
+    handleSqlErrors,
 } = require('./errors/index')
 
 app.use(express.json());
@@ -13,6 +13,7 @@ app.use(express.json());
 app.use('/api', apiRouter)
 
 app.all('/*', routeNotFoundError) 
+
 app.use(handleCustomErrors)
 app.use(handleSqlErrors)
 app.use(handleServerErrors)
