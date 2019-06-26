@@ -3,18 +3,15 @@ const app = express();
 const apiRouter = require ('./routes/api-router')
 const {
     handleCustomErrors, 
-    handleServerErrors
+    handleServerErrors,
+    routeNotFoundError
 } = require('./errors/index')
-
 
 app.use(express.json());
 
 app.use('/api', apiRouter)
 
-app.all('/*', (req, res, next) => {
-res.status(404).send({ msg: 'Route not found' });
-}) 
-
+app.all('/*', routeNotFoundError) 
 app.use(handleCustomErrors)
 app.use(handleServerErrors)
 

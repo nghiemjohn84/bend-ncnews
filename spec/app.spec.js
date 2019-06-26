@@ -54,4 +54,23 @@ describe.only('/', () => {
             })
         })
     })
+    describe('/articles',() => {
+        it('GET: status code 200 and returns an array of article objects', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(res => {
+                expect(res.body.articles).to.be.an('array');
+                expect(res.body.articles[0]).to.contain.keys('article_id', 'title', 'author', 'body', 'created_at', 'votes')
+            })
+        })
+        it('GET: status code 404 when an invalid route is passed', () => {
+            return request(app)
+            .get('/api/articles/invalid')
+            .expect(404)
+            .then (res => {
+                expect(res.body.msg).to.equal('Route not found')
+            })
+        })
+    })
 })
