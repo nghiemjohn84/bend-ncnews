@@ -29,10 +29,10 @@ exports.addVoteToArticle = (article_id, increment) => {
     .where('article_id', article_id)
     .increment({votes: increment})
     .then(([article]) => {
-      if (!article) {
+      if (!increment) {
         return Promise.reject({
-          status: 404,
-          msg: `Invalid Request`
+          status: 400,
+          msg: `Vote Count Value Required`
         });
       } else return article;
     });

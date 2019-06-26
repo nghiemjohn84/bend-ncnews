@@ -6,7 +6,7 @@ const chai = require('chai');
 const { expect } = chai;
 
 describe.only('/', () => {
-  after(() => connection.destroy()); 
+  after(() => connection.destroy());
   beforeEach(() => connection.seed.run());
 
   describe('/', () => {
@@ -15,10 +15,10 @@ describe.only('/', () => {
         .get('/invalidRoute')
         .expect(404)
         .then(res => {
-          expect(res.body.msg).to.equal('Route Not Found!')
-        })
-    })
-  })
+          expect(res.body.msg).to.equal('Route Not Found!');
+        });
+    });
+  });
 
   describe('/api', () => {
     describe('/topics', () => {
@@ -40,17 +40,17 @@ describe.only('/', () => {
           });
       });
       it('Invalid Method: status code 405', () => {
-          const invalidMethods = ['patch', 'put', 'post', 'delete']
-          const methodPromise = invalidMethods.map(method => {
-        return request(app)
-        [method]('/api/topics')
-        .expect(405)
-        .then(res => {
-            expect(res.body.msg).to.equal('Method Not Allowed')
-             })
-        })
-        return Promise.all(methodPromise)
-      })
+        const invalidMethods = ['patch', 'put', 'post', 'delete'];
+        const methodPromise = invalidMethods.map(method => {
+          return request(app)
+            [method]('/api/topics')
+            .expect(405)
+            .then(res => {
+              expect(res.body.msg).to.equal('Method Not Allowed');
+            });
+        });
+        return Promise.all(methodPromise);
+      });
     });
     describe('/users', () => {
       describe('/users/:username', () => {
@@ -76,17 +76,17 @@ describe.only('/', () => {
             });
         });
         it('Invalid Method: status code 405', () => {
-            const invalidMethods = ['patch', 'put', 'post', 'delete']
-            const methodPromise = invalidMethods.map(method => {
-          return request(app)
-          [method]('/api/users/:username')
-          .expect(405)
-          .then(res => {
-              expect(res.body.msg).to.equal('Method Not Allowed')
-            })
-          })
-          return Promise.all(methodPromise)
-        })
+          const invalidMethods = ['patch', 'put', 'post', 'delete'];
+          const methodPromise = invalidMethods.map(method => {
+            return request(app)
+              [method]('/api/users/:username')
+              .expect(405)
+              .then(res => {
+                expect(res.body.msg).to.equal('Method Not Allowed');
+              });
+          });
+          return Promise.all(methodPromise);
+        });
       });
     });
   });
@@ -106,96 +106,114 @@ describe.only('/', () => {
             'votes'
           );
         });
-    })
+    });
     it('Invalid Method: status code 405', () => {
-        const invalidMethods = ['patch', 'put', 'post', 'delete']
-        const methodPromise = invalidMethods.map(method => {
-      return request(app)
-      [method]('/api/articles')
-      .expect(405)
-      .then(res => {
-          expect(res.body.msg).to.equal('Method Not Allowed')
-           })
-      })
-      return Promise.all(methodPromise)
-    })
-  })
+      const invalidMethods = ['patch', 'put', 'post', 'delete'];
+      const methodPromise = invalidMethods.map(method => {
+        return request(app)
+          [method]('/api/articles')
+          .expect(405)
+          .then(res => {
+            expect(res.body.msg).to.equal('Method Not Allowed');
+          });
+      });
+      return Promise.all(methodPromise);
+    });
+  });
   describe('/articles', () => {
     describe('/:article_id', () => {
-    it('GET: status code 200 and returns an object of the single object based on its ID', () => {
-      return request(app)
-        .get('/api/articles/1')
-        .expect(200)
-        .then(res => {
-          expect(res.body.article.article_id).to.equal(1);
-          expect(res.body.article).to.contain.keys(
-            'article_id',
-            'title',
-            'topic',
-            'author',
-            'body',
-            'created_at',
-            'votes',
-            'comment_count'
-          );
-          expect(res.body.article.comment_count).to.equal('13');
-        });
-    });
-    it('GET: status code 404 when user enters an article ID that is not available', () => {
-      return request(app)
-        .get('/api/articles/999')
-        .expect(404)
-        .then(res => {
-          expect(res.body.msg).to.equal('article 999 not found');
-        });
-    });
-    it('GET: status code 400 when an invalid id (not a number) is passed for article_id', () => {
-      return request(app)
-        .get('/api/articles/invalid')
-        .expect(400)
-        .then(res => {
-          expect(res.body.msg).to.equal('Invalid Input');
-        });
-    });
-    it('PATCH: status code 201 and responds with the article with the updated vote count', () => {
-      return request(app)
-        .patch('/api/articles/1')
-        .send({ inc_votes: -10 })
-        .expect(201)
-        .then(res => {
-          expect(res.body.article.votes).to.equal(90);
-          expect(res.body.article).to.contain.keys(
-            'article_id',
-            'title',
-            'topic',
-            'author',
-            'body',
-            'created_at',
-            'votes'
-          );
-        });
-    });
-    it('PATCH: status 400 when an invalid request has been made for the vote count', () => {
-      return request(app)
-        .patch('/api/articles/1')
-        .send({ inc_votes: 'cat' })
-        .expect(400)
-        .then(res => {
-          expect(res.body.msg).to.equal('Invalid Input');
-        });
-    });
-    it('Invalid Method: status code 405', () => {
-        const invalidMethods = ['put', 'post', 'delete']
+      it('GET: status code 200 and returns an object of the single object based on its ID', () => {
+        return request(app)
+          .get('/api/articles/1')
+          .expect(200)
+          .then(res => {
+            expect(res.body.article.article_id).to.equal(1);
+            expect(res.body.article).to.contain.keys(
+              'article_id',
+              'title',
+              'topic',
+              'author',
+              'body',
+              'created_at',
+              'votes',
+              'comment_count'
+            );
+            expect(res.body.article.comment_count).to.equal('13');
+          });
+      });
+      it('GET: status code 404 when user enters an article ID that is not available', () => {
+        return request(app)
+          .get('/api/articles/999')
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal('article 999 not found');
+          });
+      });
+      it('GET: status code 400 when an invalid id (not a number) is passed for article_id', () => {
+        return request(app)
+          .get('/api/articles/invalid')
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Input');
+          });
+      });
+      it('PATCH: status code 201 and responds with the article with an incremented vote count', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 10 })
+          .expect(201)
+          .then(res => {
+            expect(res.body.article.votes).to.equal(110);
+            expect(res.body.article).to.contain.keys(
+              'article_id',
+              'title',
+              'topic',
+              'author',
+              'body',
+              'created_at',
+              'votes'
+            );
+          }); 
+      });
+      it('PATCH: status code 201 and responds with the article with a decremented vote count', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: -10 })
+          .expect(201)
+          .then(res => {
+            expect(res.body.article.votes).to.equal(90);
+          }); 
+      });
+      it('PATCH: status 400 when an invalid request has been made for the vote count', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 'cat' })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Input');
+          });
+      });
+      it('PATCH: status 400 when no value has been provided for the vote count', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 0})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Vote Count Value Required');
+          });
+      });
+      it('Invalid Method: status code 405', () => {
+        const invalidMethods = ['put', 'post', 'delete'];
         const methodPromise = invalidMethods.map(method => {
-      return request(app)
-      [method]('/api/articles/:article_id')
-      .expect(405)
-      .then(res => {
-          expect(res.body.msg).to.equal('Method Not Allowed')
-           })
-      })
-      return Promise.all(methodPromise)
-    })
+          return request(app)
+            [method]('/api/articles/:article_id')
+            .expect(405)
+            .then(res => {
+              expect(res.body.msg).to.equal('Method Not Allowed');
+            });
+        });
+        return Promise.all(methodPromise);
+      });
+    });
   });
 });
-})
