@@ -64,13 +64,35 @@ describe.only('/', () => {
                 expect(res.body.articles[0]).to.contain.keys('article_id', 'title', 'author', 'body', 'created_at', 'votes')
             })
         })
-        it('GET: status code 404 when an invalid route is passed', () => {
-            return request(app)
-            .get('/api/articles/invalid')
-            .expect(404)
-            .then (res => {
-                expect(res.body.msg).to.equal('Route not found')
-            })
-        })
+        // it('GET: status code 404 when an invalid route is passed', () => {
+        //     return request(app)
+        //     .get('/api/articles/invalid')
+        //     .expect(404)
+        //     .then (res => {
+        //         expect(res.body.msg).to.equal('Route not found')
+        //     })
+        // })
     })
-})
+    describe('/:article_id', () => {
+        it('GET: status code 200 and returns an object of the single object based on its ID', () => {
+          return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then(res => {
+              expect(res.body.article.article_id).to.equal(1);
+              expect(res.body.article).to.contain.keys(
+                'article_id',
+                'title',
+                'topic',
+                'author',
+                'body',
+                'created_at',
+                'votes',
+                'comment_count'
+              );
+              expect(res.body.article.comment_count).to.equal('13');
+        });
+      });
+
+    })
+}) 
