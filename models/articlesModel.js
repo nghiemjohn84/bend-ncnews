@@ -44,6 +44,11 @@ exports.addCommentByArticleId = (article_id, username, body) => {
     .into('comments')
     .returning('*')
     .then(([comment]) => {
-      return comment;
+      if (!username) {
+        return Promise.reject({
+          status: 400,
+          msg: `Username Required`
+        });
+      } else return comment;
     });
 };

@@ -13,7 +13,9 @@ exports.routeNotFoundError = (req, res, next) => {
 
 exports.handleSqlErrors = (err, req, res, next) => {
     const sqlErrorCodes = { 
-        '22P02': 'Invalid Input'
+        '22P02': 'Invalid Input',
+        '23503': 'Invalid Request',
+        '23502': 'Missing Required Information'
     };
     if(sqlErrorCodes[err.code]){
     res.status(400).send({msg: sqlErrorCodes[err.code]})

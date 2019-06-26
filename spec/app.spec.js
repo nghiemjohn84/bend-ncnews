@@ -227,6 +227,42 @@ describe.only('/', () => {
             expect(res.body.comment.body).to.equal('Hello, this is a test');
           });
       });
+      it('POST: status code 400 when invalid article id is used', () => {
+        return request(app)
+          .post('/api/articles/999/comments')
+          .send({username: 'rogersop', body: 'Hello, this is a test'})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Request')
+          })
+      })
+      it('POST: status code 400 when invalid username is used', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({username: 'bobby', body: 'Hello, this is a test'})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Request')
+          })
+        })
+        it('POST: status code 400 when no comment body has been provided', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({username: 'rogersop'})
+            .expect(400)
+            .then(res => {
+              expect(res.body.msg).to.equal('Missing Required Information')
+            })
+          })
+          it('POST: status code 400 when no username has been provided', () => {
+            return request(app)
+              .post('/api/articles/1/comments')
+              .send({body: 'Hello, this is a test'})
+              .expect(400)
+              .then(res => {
+                expect(res.body.msg).to.equal('Username Required')
+              });
+            });
     });
   });
 });
