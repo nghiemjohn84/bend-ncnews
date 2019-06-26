@@ -92,7 +92,14 @@ describe.only('/', () => {
               );
               expect(res.body.article.comment_count).to.equal('13');
         });
+      })
+      it('GET: status code 404 when user enters an article ID that is not available', () => {
+        return request(app)
+          .get('/api/articles/999')
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal('article 999 not found');
+          });
       });
-
     })
 }) 
