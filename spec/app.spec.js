@@ -290,7 +290,14 @@ describe.only('/', () => {
               expect(res.body.comment).to.be.descendingBy('created_at');
             });
         });
-        it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specified coloumn in ascending order', () => {
+        it('GET: status code 200 and reponds with an array of comments for a given article ID sorted by created_at as default but is ascending order when specified', () => {
+          return request(app)
+            .get('/api/articles/1/comments?order=asc')
+            .expect(200)
+            .then(res => {
+              expect(res.body.comment).to.be.sortedBy('created_at');
+            });
+        });it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specified coloumn in ascending order', () => {
           return request(app)
             .get('/api/articles/1/comments?sort_by=comment_id&order=asc')
             .expect(200)
@@ -311,7 +318,15 @@ describe.only('/', () => {
             .get('/api/articles/1/comments?sort_by=name')
             .expect(400)
             .then(res => {
-              expect(res.body.msg).to.equal('Invalid request - Column Does Not Exist');
+              expect(res.body.msg).to.equal('Invalid Query');
+            });
+        });
+        it('GET: status code 400 when the order by query is not available', () => {
+          return request(app)
+            .get('/api/articles/1/comments?sort_by=comment_id?order=lowest')
+            .expect(400)
+            .then(res => {
+              expect(res.body.msg).to.equal('Invalid Query');
             });
         });
         it('Invalid Method: status code 405', () => {
