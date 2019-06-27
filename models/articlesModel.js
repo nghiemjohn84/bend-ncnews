@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-exports.fetchAllArticles = (sort_by = 'created_at', order = 'desc', author) => {
+exports.fetchAllArticles = (sort_by = 'created_at', order = 'desc', author, topic) => {
   return connection
   .select('articles.*')
   .from('articles')
@@ -11,6 +11,8 @@ exports.fetchAllArticles = (sort_by = 'created_at', order = 'desc', author) => {
   .modify((query) => { 
     if(author) {
       query.where('articles.author', author) 
+    } else if (topic) {
+      query.where('articles.topic', topic )
     }
   })
 

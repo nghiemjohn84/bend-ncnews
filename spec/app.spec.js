@@ -115,7 +115,7 @@ describe.only('/', () => {
         .get('/api/articles')
         .expect(200)
         .then(res => {
-          expect(res.body.articles).to.be.descendingBy('created_at')
+          expect(res.body.articles).to.be.descendingBy('created_at');
         });
     });
     it('GET: status code 200 and returns an array of article objects sorted by a specific column name in descending order as per query', () => {
@@ -123,7 +123,7 @@ describe.only('/', () => {
         .get('/api/articles/?sort_by=title&order=desc')
         .expect(200)
         .then(res => {
-          expect(res.body.articles).to.be.descendingBy('title')
+          expect(res.body.articles).to.be.descendingBy('title');
         });
     });
     it('GET: status code 200 and responds with an array of article objects sorted by a specific column name in ascending order as per query', () => {
@@ -132,9 +132,9 @@ describe.only('/', () => {
         .expect(200)
         .then(res => {
           res.body.articles.forEach(comment => {
-          comment.comment_count = Number(comment.comment_count)
-          })
-          expect(res.body.articles).to.be.sortedBy('comment_count')
+            comment.comment_count = Number(comment.comment_count);
+          });
+          expect(res.body.articles).to.be.sortedBy('comment_count');
         });
     });
     it('GET: status code 200 and responds with an array of articles by a specific author', () => {
@@ -142,8 +142,17 @@ describe.only('/', () => {
         .get('/api/articles?author=butter_bridge')
         .expect(200)
         .then(res => {
-          expect(res.body.articles).to.have.lengthOf(3)
-          expect(res.body.articles[0].author).to.equal('butter_bridge')
+          expect(res.body.articles).to.have.lengthOf(3);
+          expect(res.body.articles[0].author).to.equal('butter_bridge');
+        });
+    });
+    it('GET: status code 200 and responds with an array of articles for a sepcific topic', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.have.lengthOf(11);
+          expect(res.body.articles[0].topic).to.equal('mitch');
         });
     });
     it('Invalid Method: status code 405', () => {
