@@ -92,7 +92,7 @@ describe.only('/', () => {
       });
     });
   });
-  describe.only('/articles', () => {
+  describe('/articles', () => {
     it('GET: status code 200 and returns an array of article objects', () => {
       return request(app)
         .get('/api/articles')
@@ -400,4 +400,21 @@ describe.only('/', () => {
       });
     });
   });
+  describe('/comments', () => {
+      describe('/comments/:comment_id', () => {
+        it('PATCH: status code 201, returns an updated count for a specified comment', () => {
+        return request(app)
+        .patch('/api/comments/1')
+        .send({inc_votes: 10})
+        .expect(201)
+        })
+      })
+    })
+    describe('DELETE: /comments',() => {
+      it('DELETE: status 204', () => {
+        return request(app)
+         .delete('/api/comments/1')
+         .expect(204)
+      })
+    })
 });
