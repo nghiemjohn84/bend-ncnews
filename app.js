@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use('/api', apiRouter)
 
-app.all('/*', routeNotFoundError) 
+app.use('/*', routeNotFoundError) 
 
 app.use(handleCustomErrors)
 app.use(handleSqlErrors)

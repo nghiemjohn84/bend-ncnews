@@ -126,7 +126,7 @@ describe.only('/', () => {
           expect(res.body.articles).to.be.descendingBy('title')
         });
     });
-    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in ascending order as per query', () => {
+    it('GET: status code 200 and responds with an array of article objects sorted by a specific column name in ascending order as per query', () => {
       return request(app)
         .get('/api/articles/?sort_by=comment_count&order=asc')
         .expect(200)
@@ -135,6 +135,15 @@ describe.only('/', () => {
           comment.comment_count = Number(comment.comment_count)
           })
           expect(res.body.articles).to.be.sortedBy('comment_count')
+        });
+    });
+    it('GET: status code 200 and responds with an array of articles by a specific author', () => {
+      return request(app)
+        .get('/api/articles?author=butter_bridge')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.have.lengthOf(3)
+          expect(res.body.articles[0].author).to.equal('butter_bridge')
         });
     });
     it('Invalid Method: status code 405', () => {
