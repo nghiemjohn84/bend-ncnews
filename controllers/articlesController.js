@@ -36,8 +36,7 @@ exports.postCommentByArticleId = (req, res, next) => {
   const username = req.body.username
   const body = req.body.body
   addCommentByArticleId(article_id, username, body).then(comment =>{
-    res.status(201)
-    .send({comment})
+    res.status(201).send({comment})
   })
   .catch(next)
 }
@@ -45,7 +44,6 @@ exports.postCommentByArticleId = (req, res, next) => {
 exports.sendCommentsByArticleId = (req, res, next) => {
   const {sort_by, order} = req.query
   const {article_id} = req.params
-  console.log(sort_by, order)
   fetchCommentsByArticleId(article_id, sort_by, order).then((comment) => {
     res.status(200).send({comment})
   })

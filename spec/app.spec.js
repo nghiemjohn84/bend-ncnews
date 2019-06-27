@@ -4,9 +4,8 @@ const request = require('supertest');
 const connection = require('../db/connection');
 const chai = require('chai');
 const { expect } = chai;
-const chaiSorted = require('chai-sorted')
-chai.use(chaiSorted)
-
+const chaiSorted = require('chai-sorted');
+chai.use(chaiSorted);
 
 describe.only('/', () => {
   after(() => connection.destroy());
@@ -218,7 +217,7 @@ describe.only('/', () => {
         return Promise.all(methodPromise);
       });
     });
-    describe.only('/:article_id/comments', () => {
+    describe('POST: /:article_id/comments', () => {
       it('POST: status code 201 and responds with the posted comment based on the article_id', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -266,32 +265,52 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('Username Required');
           });
       });
-      it('GET: status code 200 and responds with an array of comments for a given article ID', () => {
-        return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(res => {
-            expect(res.body.comment[0].article_id).to.equal(1)
-            expect(res.body.comment.length).to.equal(13)
-            expect(res.body.comment[0]).to.contain.keys('comment_id', 'author', 'created_at', 'votes', 'body')
-          })
-      })
-      it('GET: status code 200 and responds with an array of comments for a given article ID sorted by created_at in descending order by default', () => {
-        return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(res => {
-            expect(res.body.comment).to.be.descendingBy('created_at')
-          })
-      })
-      it('GET: status code 200 and responds with an array of comments for a given article ID sorted by comment_id in ascending order', () => {
-        return request(app)
-          .get('/api/articles/1/comments?sort_by=comment_id&&order=asc')
-          .expect(200)
-          .then(res => {
-            expect(res.body.comment).to.be.sortedBy('comment_id')
-          })
-        })
+      describe('GET: /:article_id/comments', () => {
+        it('GET: status code 200 and responds with an array of comments for a given article ID', () => {
+          return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(res => {
+              expect(res.body.comment[0].article_id).to.equal(1);
+              expect(res.body.comment.length).to.equal(13);
+              expect(res.body.comment[0]).to.contain.keys(
+                'comment_id',
+                'author',
+                'created_at',
+                'votes',
+                'body'
+              );
+            });
+        });
+        it('GET: status code 200 and responds with an array of comments for a given article ID sorted by created_at in descending order by default', () => {
+          return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(res => {
+              expect(res.body.comment).to.be.descendingBy('created_at');
+            });
+        });
+        it('GET: status code 200 and responds with an array of comments for a given article ID sorted by comment_id in ascending order as per the get request', () => {
+          return request(app)
+            .get('/api/articles/1/comments?sort_by=comment_id&order=asc')
+            .expect(200)
+            .then(res => {
+              expect(res.body.comment).to.be.sortedBy('comment_id');
+            });
+        });
+        it('Invalid Method: status code 405', () => {
+          const invalidMethods = ['put', 'delete', 'patch'];
+          const methodPromise = invalidMethods.map(method => {
+            return request(app)
+              [method]('/api/articles/:article_id/comments')
+              .expect(405)
+              .then(res => {
+                expect(res.body.msg).to.equal('Method Not Allowed');
+              });
+          });
+          return Promise.all(methodPromise);
+        });
+      });
     });
   });
 });

@@ -21,6 +21,8 @@ articlesRouter.route('/:article_id')
 articlesRouter.route('/:article_id/comments')
     .post(postCommentByArticleId)
     .get(sendCommentsByArticleId)
+    .all(handleMethodErrors)
+
 
 
 
