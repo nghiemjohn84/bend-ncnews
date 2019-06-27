@@ -1,4 +1,5 @@
 const connection = require('../db/connection');
+const {checkExists} = require('./index')
 
 exports.fetchAllArticles = (sort_by = 'created_at', order = 'desc', author, topic) => {
   return connection
@@ -15,6 +16,18 @@ exports.fetchAllArticles = (sort_by = 'created_at', order = 'desc', author, topi
       query.where('articles.topic', topic )
     }
   })
+  .then (articles => {
+    const authorExists = author ? checkExists(author, 'users', 'username') : null
+    const topicExists = topic ? checkExists(topic, 'topics', 'slug') : null 
+    return Promise.all([authorExists, topicExists, articles]);
+  })
+  .then(([authorExists, topicExists, articles]) => {
+    if(authorExists === false){
+      return Promise.reject({status: 404, msg: `Author ${author} Not Found`})
+    } else if (topicExists === false) {
+      return Promise.reject({status: 404, msg: `Topic ${topic} Not Found`})
+    } else return articles
+  })
 
 }
 
@@ -23,7 +36,7 @@ exports.fetchArticleById = article_id => {
     .first('articles.*')
     .from('articles')
     .count('comments.article_id as comment_count')
-    .join('comments', 'articles.article_id', 'comments.article_id')
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .where('articles.article_id', article_id)
     .groupBy('articles.article_id', 'comments.article_id')
     .then(article => {
@@ -74,4 +87,13 @@ exports.fetchCommentsByArticleId = (article_id, sort_by = 'created_at', order = 
     .where('article_id', article_id)
     .returning('*')
     .orderBy(sort_by, order)
+    .then((comment) => {
+      if(order !== 'asc' && order !== 'desc') {
+        return Promise.reject({
+          status: 400,
+          msg: 'Invalid Order Method'
+        })
+      } else return comment
+    })
 }
+

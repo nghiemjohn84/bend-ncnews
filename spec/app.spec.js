@@ -92,7 +92,7 @@ describe('/', () => {
       });
     });
   });
-  describe.only('/articles', () => {
+  describe('/articles', () => {
     it('GET: status code 200 and returns an array of article objects', () => {
       return request(app)
         .get('/api/articles')
@@ -174,7 +174,7 @@ describe('/', () => {
         .then(res => {
           expect(res.body.articles).to.have.lengthOf(11);
           for (let i = 0; i < res.body.articles.length; i++){
-          expect(res.body.articles[i].topic).to.equal('mitch')}
+          expect(res.body.articles[i].topic).to.equal('mitch')};
         });
     });
     it('GET: status code 200 and responds with an array of articles for a sepcific topic and from a specific author', () => {
@@ -184,11 +184,18 @@ describe('/', () => {
         .then(res => {
           expect(res.body.articles).to.have.lengthOf(3);
           for (let i = 0; i < res.body.articles.length; i++){
-          expect(res.body.articles[i].topic).to.equal('mitch')
-          expect(res.body.articles[i].author).to.equal('butter_bridge')}
+          expect(res.body.articles[i].topic).to.equal('mitch');
+          expect(res.body.articles[i].author).to.equal('butter_bridge')};
         });
     });
-
+    it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
+      return request(app)
+        .get('/api/articles?sort_by=invalidColumn')
+        .expect(400)
+        .then(res => {
+          expect(res.body.msg).to.equal('Invalid Query')
+        });
+    });
     it('Invalid Method: status code 405', () => {
       const invalidMethods = ['patch', 'put', 'post', 'delete'];
       const methodPromise = invalidMethods.map(method => {
@@ -411,12 +418,12 @@ describe('/', () => {
               expect(res.body.msg).to.equal('Invalid Query');
             });
         });
-        it('GET: status code 400 when the order by query is not available', () => {
+        it('GET: status code 400 when the order query is invalid', () => {
           return request(app)
-            .get('/api/articles/1/comments?sort_by=comment_id?order=lowest')
+            .get('/api/articles/1/comments?order=lowest')
             .expect(400)
             .then(res => {
-              expect(res.body.msg).to.equal('Invalid Query');
+              expect(res.body.msg).to.equal('Invalid Order Method')
             });
         });
         it('Invalid Method: status code 405', () => {
