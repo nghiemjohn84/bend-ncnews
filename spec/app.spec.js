@@ -400,21 +400,70 @@ describe.only('/', () => {
       });
     });
   });
-  describe('/comments', () => {
-      describe('/comments/:comment_id', () => {
-        it('PATCH: status code 201, returns an updated count for a specified comment', () => {
+  describe.only('/comments', () => {
+    describe('/comments/:comment_id', () => {
+      it('PATCH: status code 200, returns an incremented count for a specified comment', () => {
         return request(app)
-        .patch('/api/comments/1')
-        .send({inc_votes: 10})
-        .expect(201)
-        })
-      })
-    })
-    describe('DELETE: /comments',() => {
-      it('DELETE: status 204', () => {
+          .patch('/api/comments/1')
+          .send({ inc_votes: 10 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment.votes).to.equal(26);
+            expect(res.body.comment.comment_id).to.equal(1);
+          });
+      });
+      it('PATCH: status code 404 when comment id does not exist', () => {
         return request(app)
-         .delete('/api/comments/1')
-         .expect(204)
-      })
-    })
+          .patch('/api/comments/999')
+          .send({ inc_votes: 10 })
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal('Comment 999 Not Found');
+          });
+      });
+      it('PATCH: status code 400 when comment id is invalid', () => {
+        return request(app)
+          .patch('/api/comments/abc')
+          .send({ inc_votes: 10 })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Input');
+          });
+      });
+      it('PATCH: status code 400 when an invalid vote value is passed', () => {
+        return request(app)
+          .patch('/api/comments/1')
+          .send({ inc_votes: 'NoVote' })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Invalid Input');
+          });
+      });
+      it('DELETE: status code 204 and comment is deleted', () => {
+        return request(app)
+          .delete('/api/comments/1')
+          .expect(204);
+      });
+      it('DELETE: status code 404 when comment id does not exist', () => {
+        return request(app)
+          .delete('/api/comments/999')
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal('Comment 999 Not Found');
+          });
+      });
+      it('Invalid Method: status code 405', () => {
+        const invalidMethods = ['get', 'post', 'put'];
+        const methodPromise = invalidMethods.map(method => {
+          return request(app)
+            [method]('/api/comments/:comment_id')
+            .expect(405)
+            .then(res => {
+              expect(res.body.msg).to.equal('Method Not Allowed');
+            });
+        });
+        return Promise.all(methodPromise);
+      });
+    });
+  });
 });
