@@ -7,7 +7,7 @@ const { expect } = chai;
 const chaiSorted = require('chai-sorted');
 chai.use(chaiSorted);
 
-describe('/', () => {
+describe.only('/', () => {
   after(() => connection.destroy());
   beforeEach(() => connection.seed.run());
 
@@ -196,6 +196,30 @@ describe('/', () => {
           expect(res.body.msg).to.equal('Invalid Query')
         });
     });
+    it('GET: status code 404 and responds with an error provided with a non existent topic', () => {
+      return request(app)
+        .get('/api/articles?topic=imNotHere')
+        .expect(404)
+        .then(res => {
+          expect(res.body.msg).to.equal('Topic imNotHere Not Found')
+        });
+    });
+    it('GET: status code 404 and responds with an error provided with a non existent author', () => {
+      return request(app)
+        .get('/api/articles?author=imNotHere')
+        .expect(404)
+        .then(res => {
+          expect(res.body.msg).to.equal('Author imNotHere Not Found')
+        });
+    });
+    it('GET: status code 400 and when attempting to sort by a column that does not exist', () => {
+      return request(app)
+        .get('/api/articles?sort_by=nothing')
+        .expect(400)
+        .then(res => {
+          expect(res.body.msg).to.equal('Invalid Query')
+        });
+    });
     it('Invalid Method: status code 405', () => {
       const invalidMethods = ['patch', 'put', 'post', 'delete'];
       const methodPromise = invalidMethods.map(method => {
@@ -282,13 +306,22 @@ describe('/', () => {
             expect(res.body.msg).to.equal('Invalid Input');
           });
       });
-      it('PATCH: status 400 when no value has been provided for the vote count', () => {
+      it('PATCH: status 200 when no value has been provided for the vote countm responds with an unchanged article', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({ inc_votes: 0 })
-          .expect(400)
+          .expect(201)
           .then(res => {
-            expect(res.body.msg).to.equal('Vote Count Value Required');
+            expect(res.body.article.votes).to.equal(100);
+          });
+      });
+      it('PATCH: status 200 when there is no information in the request body.  Responds with the unchanged article', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({})
+          .expect(201)
+          .then(res => {
+            expect(res.body.article.votes).to.equal(100);
           });
       });
       it('Invalid Method: status code 405', () => {
@@ -478,6 +511,15 @@ describe('/', () => {
           .expect(400)
           .then(res => {
             expect(res.body.msg).to.equal('Invalid Input');
+          });
+      });
+      it('PATCH: status code 200 and response with an unchanged comment when no key is invalid', () => {
+        return request(app)
+          .patch('/api/comments/1')
+          .send({ invalidKey: 10 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment.votes).to.equal(16)
           });
       });
       it('DELETE: status code 204 and comment is deleted', () => {

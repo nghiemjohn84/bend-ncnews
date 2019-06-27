@@ -49,20 +49,15 @@ exports.fetchArticleById = article_id => {
     });
 };
 
-exports.addVoteToArticle = (article_id, increment) => {
+exports.addVoteToArticle = (article_id, increment = 0) => {
   return connection
     .returning('*')
     .from('articles')
     .where('article_id', article_id)
-    .increment({ votes: increment })
+    .increment({votes: increment })
     .then(([article]) => {
-      if (!increment) {
-        return Promise.reject({
-          status: 400,
-          msg: `Vote Count Value Required`
-        });
-      } else return article;
-    });
+      return article
+    })
 };
 
 exports.addCommentByArticleId = (article_id, username, body) => {
