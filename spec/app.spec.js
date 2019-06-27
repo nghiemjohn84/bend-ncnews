@@ -110,14 +110,14 @@ describe.only('/', () => {
           );
         });
     });
-    // it('GET: status code 200 and returns an array of article objects', () => {
-    //   return request(app)
-    //     .get('/api/articles?sort_by')
-    //     .expect(200)
-    //     .then(res => {
-    //       console.log(res.body)
-    //     });
-    // });
+    it('GET: status code 200 and returns an array of article objects', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.be.descendingBy('created_at')
+        });
+    });
     it('Invalid Method: status code 405', () => {
       const invalidMethods = ['patch', 'put', 'post', 'delete'];
       const methodPromise = invalidMethods.map(method => {
