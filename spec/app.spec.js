@@ -7,7 +7,7 @@ const { expect } = chai;
 const chaiSorted = require('chai-sorted');
 chai.use(chaiSorted);
 
-describe.only('/', () => {
+describe('/', () => {
   after(() => connection.destroy());
   beforeEach(() => connection.seed.run());
 
@@ -92,7 +92,7 @@ describe.only('/', () => {
       });
     });
   });
-  describe('/articles', () => {
+  describe.only('/articles', () => {
     it('GET: status code 200 and returns an array of article objects', () => {
       return request(app)
         .get('/api/articles')
@@ -118,12 +118,20 @@ describe.only('/', () => {
           expect(res.body.articles).to.be.descendingBy('created_at');
         });
     });
-    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in descending order as per query', () => {
+    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in descending order as default', () => {
       return request(app)
-        .get('/api/articles/?sort_by=title&order=desc')
+        .get('/api/articles/?sort_by=title')
         .expect(200)
         .then(res => {
           expect(res.body.articles).to.be.descendingBy('title');
+        });
+    });
+    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in ascending order as per query', () => {
+      return request(app)
+        .get('/api/articles/?sort_by=title&order=asc')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.be.sortedBy('title');
         });
     });
     it('GET: status code 200 and responds with an array of article objects sorted by a specific column name in ascending order as per query', () => {
@@ -137,13 +145,26 @@ describe.only('/', () => {
           expect(res.body.articles).to.be.sortedBy('comment_count');
         });
     });
+    it('GET: status code 200 and responds with an array of article objects sorted by a specific column name in descending order as default', () => {
+      return request(app)
+        .get('/api/articles/?sort_by=comment_count')
+        .expect(200)
+        .then(res => {
+          res.body.articles.forEach(comment => {
+            comment.comment_count = Number(comment.comment_count);
+          });
+          expect(res.body.articles).to.be.descendingBy('comment_count');
+        });
+    });
     it('GET: status code 200 and responds with an array of articles by a specific author', () => {
       return request(app)
         .get('/api/articles?author=butter_bridge')
         .expect(200)
         .then(res => {
+          for (let i = 0; i< res.body.articles.length; i++){
+          expect(res.body.articles[i].author).to.equal('butter_bridge')}
           expect(res.body.articles).to.have.lengthOf(3);
-          expect(res.body.articles[0].author).to.equal('butter_bridge');
+          
         });
     });
     it('GET: status code 200 and responds with an array of articles for a sepcific topic', () => {
@@ -152,9 +173,22 @@ describe.only('/', () => {
         .expect(200)
         .then(res => {
           expect(res.body.articles).to.have.lengthOf(11);
-          expect(res.body.articles[0].topic).to.equal('mitch');
+          for (let i = 0; i < res.body.articles.length; i++){
+          expect(res.body.articles[i].topic).to.equal('mitch')}
         });
     });
+    it('GET: status code 200 and responds with an array of articles for a sepcific topic and from a specific author', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch&author=butter_bridge')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.have.lengthOf(3);
+          for (let i = 0; i < res.body.articles.length; i++){
+          expect(res.body.articles[i].topic).to.equal('mitch')
+          expect(res.body.articles[i].author).to.equal('butter_bridge')}
+        });
+    });
+
     it('Invalid Method: status code 405', () => {
       const invalidMethods = ['patch', 'put', 'post', 'delete'];
       const methodPromise = invalidMethods.map(method => {
@@ -400,7 +434,7 @@ describe.only('/', () => {
       });
     });
   });
-  describe.only('/comments', () => {
+  describe('/comments', () => {
     describe('/comments/:comment_id', () => {
       it('PATCH: status code 200, returns an incremented count for a specified comment', () => {
         return request(app)
