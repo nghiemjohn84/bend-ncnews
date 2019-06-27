@@ -92,7 +92,7 @@ describe.only('/', () => {
       });
     });
   });
-  describe('/articles', () => {
+  describe.only('/articles', () => {
     it('GET: status code 200 and returns an array of article objects', () => {
       return request(app)
         .get('/api/articles')
@@ -110,12 +110,31 @@ describe.only('/', () => {
           );
         });
     });
-    it('GET: status code 200 and returns an array of article objects', () => {
+    it('GET: status code 200 and returns an array of article objects sorted by date in descending order by default', () => {
       return request(app)
         .get('/api/articles')
         .expect(200)
         .then(res => {
           expect(res.body.articles).to.be.descendingBy('created_at')
+        });
+    });
+    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in descending order as per query', () => {
+      return request(app)
+        .get('/api/articles/?sort_by=title&order=desc')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles).to.be.descendingBy('title')
+        });
+    });
+    it('GET: status code 200 and returns an array of article objects sorted by a specific column name in ascending order as per query', () => {
+      return request(app)
+        .get('/api/articles/?sort_by=comment_count&order=asc')
+        .expect(200)
+        .then(res => {
+          res.body.articles.forEach(comment => {
+          comment.comment_count = Number(comment.comment_count)
+          })
+          expect(res.body.articles).to.be.sortedBy('comment_count')
         });
     });
     it('Invalid Method: status code 405', () => {
