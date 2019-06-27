@@ -1,7 +1,12 @@
 const connection = require('../db/connection');
 
 exports.fetchAllArticles = () => {
-  return connection.select('*').from('articles');
+  return connection
+  .select('articles.*')
+  .from('articles')
+  .count('comments.comment_id as comment_count')
+  .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+  .groupBy('articles.article_id')
 };
 
 exports.fetchArticleById = article_id => {
@@ -54,7 +59,6 @@ exports.addCommentByArticleId = (article_id, username, body) => {
 };
 
 exports.fetchCommentsByArticleId = (article_id, sort_by = 'created_at', order = 'desc') => {
-  console.log()
   return connection
     .select('*')
     .from('comments')

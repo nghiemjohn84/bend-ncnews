@@ -105,10 +105,19 @@ describe.only('/', () => {
             'author',
             'body',
             'created_at',
-            'votes'
+            'votes',
+            'comment_count'
           );
         });
     });
+    // it('GET: status code 200 and returns an array of article objects', () => {
+    //   return request(app)
+    //     .get('/api/articles?sort_by')
+    //     .expect(200)
+    //     .then(res => {
+    //       console.log(res.body)
+    //     });
+    // });
     it('Invalid Method: status code 405', () => {
       const invalidMethods = ['patch', 'put', 'post', 'delete'];
       const methodPromise = invalidMethods.map(method => {
@@ -265,6 +274,15 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('Username Required');
           });
       });
+      it('POST: status code 400 when an empty object without the username and comment has been provided', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal('Missing Required Information');
+          });
+      });
       describe('GET: /:article_id/comments', () => {
         it('GET: status code 200 and responds with an array of comments for a given article ID', () => {
           return request(app)
@@ -297,7 +315,8 @@ describe.only('/', () => {
             .then(res => {
               expect(res.body.comment).to.be.sortedBy('created_at');
             });
-        });it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specified coloumn in ascending order', () => {
+        });
+        it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specified coloumn in ascending order', () => {
           return request(app)
             .get('/api/articles/1/comments?sort_by=comment_id&order=asc')
             .expect(200)
