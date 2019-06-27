@@ -15,7 +15,8 @@ exports.handleSqlErrors = (err, req, res, next) => {
     const sqlErrorCodes = { 
         '22P02': 'Invalid Input',
         '23503': 'Invalid Request',
-        '23502': 'Missing Required Information'
+        '23502': 'Missing Required Information',
+        '42703': 'Invalid request - Column Does Not Exist'
     };
     if(sqlErrorCodes[err.code]){
     res.status(400).send({msg: sqlErrorCodes[err.code]})
