@@ -161,10 +161,10 @@ describe.only('/', () => {
         .get('/api/articles?author=butter_bridge')
         .expect(200)
         .then(res => {
-          for (let i = 0; i< res.body.articles.length; i++){
-          expect(res.body.articles[i].author).to.equal('butter_bridge')}
+          for (let i = 0; i < res.body.articles.length; i++) {
+            expect(res.body.articles[i].author).to.equal('butter_bridge');
+          }
           expect(res.body.articles).to.have.lengthOf(3);
-          
         });
     });
     it('GET: status code 200 and responds with an array of articles for a sepcific topic', () => {
@@ -173,8 +173,9 @@ describe.only('/', () => {
         .expect(200)
         .then(res => {
           expect(res.body.articles).to.have.lengthOf(11);
-          for (let i = 0; i < res.body.articles.length; i++){
-          expect(res.body.articles[i].topic).to.equal('mitch')};
+          for (let i = 0; i < res.body.articles.length; i++) {
+            expect(res.body.articles[i].topic).to.equal('mitch');
+          }
         });
     });
     it('GET: status code 200 and responds with an array of articles for a sepcific topic and from a specific author', () => {
@@ -183,9 +184,10 @@ describe.only('/', () => {
         .expect(200)
         .then(res => {
           expect(res.body.articles).to.have.lengthOf(3);
-          for (let i = 0; i < res.body.articles.length; i++){
-          expect(res.body.articles[i].topic).to.equal('mitch');
-          expect(res.body.articles[i].author).to.equal('butter_bridge')};
+          for (let i = 0; i < res.body.articles.length; i++) {
+            expect(res.body.articles[i].topic).to.equal('mitch');
+            expect(res.body.articles[i].author).to.equal('butter_bridge');
+          }
         });
     });
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
@@ -193,7 +195,7 @@ describe.only('/', () => {
         .get('/api/articles?sort_by=invalidColumn')
         .expect(400)
         .then(res => {
-          expect(res.body.msg).to.equal('Invalid Query')
+          expect(res.body.msg).to.equal('Invalid Query');
         });
     });
     it('GET: status code 404 and responds with an error provided with a non existent topic', () => {
@@ -201,7 +203,7 @@ describe.only('/', () => {
         .get('/api/articles?topic=imNotHere')
         .expect(404)
         .then(res => {
-          expect(res.body.msg).to.equal('Topic imNotHere Not Found')
+          expect(res.body.msg).to.equal('Topic imNotHere Not Found');
         });
     });
     it('GET: status code 404 and responds with an error provided with a non existent author', () => {
@@ -209,7 +211,7 @@ describe.only('/', () => {
         .get('/api/articles?author=imNotHere')
         .expect(404)
         .then(res => {
-          expect(res.body.msg).to.equal('Author imNotHere Not Found')
+          expect(res.body.msg).to.equal('Author imNotHere Not Found');
         });
     });
     it('GET: status code 400 and when attempting to sort by a column that does not exist', () => {
@@ -217,7 +219,7 @@ describe.only('/', () => {
         .get('/api/articles?sort_by=nothing')
         .expect(400)
         .then(res => {
-          expect(res.body.msg).to.equal('Invalid Query')
+          expect(res.body.msg).to.equal('Invalid Query');
         });
     });
     it('Invalid Method: status code 405', () => {
@@ -337,7 +339,7 @@ describe.only('/', () => {
         return Promise.all(methodPromise);
       });
     });
-    describe.only('POST: /:article_id/comments', () => {
+    describe('POST: /:article_id/comments', () => {
       it('POST: status code 201 and responds with the posted comment based on the article_id', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -355,16 +357,16 @@ describe.only('/', () => {
           .send({ username: 'rogersop', body: 'Hello, this is a test' })
           .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal('Article 999 Not Found');
+            expect(res.body.msg).to.equal('Not Found');
           });
       });
-      it('POST: status code 400 when invalid username is used', () => {
+      it('POST: status code 404 when invalid username is used', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send({ username: 'bobby', body: 'Hello, this is a test' })
-          .expect(400)
+          .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal('Invalid Request');
+            expect(res.body.msg).to.equal('Not Found');
           });
       });
       it('POST: status code 400 when no comment body has been provided', () => {
@@ -451,12 +453,12 @@ describe.only('/', () => {
               expect(res.body.msg).to.equal('Invalid Query');
             });
         });
-        it('GET: status code 400 when the order query is invalid', () => {
+        it('GET: status code 200 when the order query is invalid, responds with comments sorted by created_at as default', () => {
           return request(app)
             .get('/api/articles/1/comments?order=lowest')
-            .expect(400)
+            .expect(200)
             .then(res => {
-              expect(res.body.msg).to.equal('Invalid Order Method')
+              expect(res.body.comments).to.be.sortedBy('created_at');
             });
         });
         it('GET: status code 404 when article id does not exists', () => {
@@ -464,7 +466,7 @@ describe.only('/', () => {
             .get('/api/articles/999/comments')
             .expect(404)
             .then(res => {
-              expect(res.body.msg).to.equal('Article 999 Does Not Exist')
+              expect(res.body.msg).to.equal('Article 999 Does Not Exist');
             });
         });
         it('Invalid Method: status code 405', () => {
@@ -527,7 +529,7 @@ describe.only('/', () => {
           .send({ invalidKey: 10 })
           .expect(200)
           .then(res => {
-            expect(res.body.comment.votes).to.equal(16)
+            expect(res.body.comment.votes).to.equal(16);
           });
       });
       it('DELETE: status code 204 and comment is deleted', () => {

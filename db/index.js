@@ -3,8 +3,8 @@ const testData = require('./test-data');
 const devData = require('./development-data');
 
 const data = {
-    development: devData,
-    test: testData
+  development: devData,
+  test: testData
 };
 
-module.exports =data[ENV]
+module.exports = data[ENV];
