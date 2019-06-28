@@ -20,7 +20,7 @@ exports.sendArticleById = (req, res, next) => {
   fetchArticleById(article_id)
     .then(article => {
       res.status(200).send({ article });
-    })
+    }) 
     .catch(next);
 };
 
@@ -36,11 +36,11 @@ exports.updateArticleVote = (req, res, next) => {
 
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  const username = req.body.username;
-  const body = req.body.body;
+  const {username} = req.body;
+  const {body} = req.body;
   addCommentByArticleId(article_id, username, body)
-    .then(comments => {
-      res.status(201).send({ comments });
+    .then(comment => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };

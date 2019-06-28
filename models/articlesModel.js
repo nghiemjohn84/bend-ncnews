@@ -1,5 +1,5 @@
 const connection = require('../db/connection');
-const { checkExists } = require('./index');
+const { checkExists } = require('./modelUtils');
 
 exports.fetchAllArticles = (
   sort_by = 'created_at',

@@ -346,9 +346,9 @@ describe.only('/', () => {
           .send({ username: 'rogersop', body: 'Hello, this is a test' })
           .expect(201)
           .then(res => {
-            expect(res.body.comments.author).to.equal('rogersop');
-            expect(res.body.comments.article_id).to.equal(1);
-            expect(res.body.comments.body).to.equal('Hello, this is a test');
+            expect(res.body.comment.author).to.equal('rogersop');
+            expect(res.body.comment.article_id).to.equal(1);
+            expect(res.body.comment.body).to.equal('Hello, this is a test');
           });
       });
       it('POST: status code 404 when invalid article id is requested', () => {
@@ -384,7 +384,7 @@ describe.only('/', () => {
           .send({ body: 'Hello, this is a test' })
           .expect(400)
           .then(res => {
-            expect(res.body.msg).to.equal('Username Required');
+            expect(res.body.msg).to.equal('Missing Required Information');
           });
       });
       it('POST: status code 400 when an empty object without the username and comment has been provided', () => {

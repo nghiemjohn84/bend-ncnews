@@ -5,8 +5,12 @@ const usersRouter = require('./usersRouter');
 const articlesRouter = require('./articlesRouter');
 const commentsRouter = require('./commentsRouter');
 const {handleMethodErrors} = require('../errors/index')
+const endpoints = require('../endpoints.json')
 
-apiRouter.route('/').all(handleMethodErrors)
+
+apiRouter.route('/')
+    .get((req,res) => res.status(200).send(endpoints))
+    .all(handleMethodErrors)
 
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/users', usersRouter);
