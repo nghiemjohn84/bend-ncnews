@@ -66,14 +66,23 @@ exports.addCommentByArticleId = (article_id, username, body) => {
     .into('comments')
     .returning('*')
     .then(([comment]) => {
-      if (!username) {
+      if(!username) {
         return Promise.reject({
           status: 400,
-          msg: `Username Required`
-        });
-      } else return comment;
-    });
-};
+          msg: 'Username Required'
+        })
+      } else return comment
+    })
+    }
+    //   const articleExists = article_id ? checkExists(article_id, 'articles', 'article_id') : null
+    //   return Promise.all([articleExists, comment])
+    // })
+    // .then (([articleExists, comment]) => {
+    //   if (articleExists === false) {
+    //     return Promise.reject({status: 404, msg: `Article ${article_id} Does Not Exist`})
+    //   } else return comment
+    // })
+
 
 exports.fetchCommentsByArticleId = (article_id, sort_by = 'created_at', order = 'desc') => {
   return connection
@@ -82,13 +91,15 @@ exports.fetchCommentsByArticleId = (article_id, sort_by = 'created_at', order = 
     .where('article_id', article_id)
     .returning('*')
     .orderBy(sort_by, order)
-    .then((comment) => {
-      if(order !== 'asc' && order !== 'desc') {
-        return Promise.reject({
-          status: 400,
-          msg: 'Invalid Order Method'
-        })
-      } else return comment
+    .then((comments) => {
+      const articleExists = article_id ? checkExists(article_id, 'articles', 'article_id') : null
+      return Promise.all([articleExists, comments])
+    })
+    .then (([articleExists, comments]) => {
+      if (articleExists === false) {
+        return Promise.reject({status: 404, msg: `Article ${article_id} Does Not Exist`})
+      } else return comments
     })
 }
+
 

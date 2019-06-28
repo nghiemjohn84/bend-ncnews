@@ -27,7 +27,7 @@ exports.updateArticleVote = (req, res, next) => {
   const increment = req.body.inc_votes;
   const {article_id} = req.params;
   addVoteToArticle(article_id, increment).then((article) => {
-    res.status(201).send({ article })
+    res.status(200).send({ article })
   })
   .catch(next)
 }
@@ -36,8 +36,8 @@ exports.postCommentByArticleId = (req, res, next) => {
   const {article_id} = req.params
   const username = req.body.username
   const body = req.body.body
-  addCommentByArticleId(article_id, username, body).then(comment =>{
-    res.status(201).send({comment})
+  addCommentByArticleId(article_id, username, body).then(comments =>{
+    res.status(201).send({comments})
   })
   .catch(next)
 }
@@ -45,8 +45,8 @@ exports.postCommentByArticleId = (req, res, next) => {
 exports.sendCommentsByArticleId = (req, res, next) => {
   const {sort_by, order} = req.query
   const {article_id} = req.params
-  fetchCommentsByArticleId(article_id, sort_by, order).then((comment) => {
-    res.status(200).send({comment})
+  fetchCommentsByArticleId(article_id, sort_by, order).then((comments) => {
+    res.status(200).send({comments})
   })
   .catch(next)
 }

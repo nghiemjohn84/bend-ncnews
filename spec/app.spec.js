@@ -270,11 +270,11 @@ describe.only('/', () => {
             expect(res.body.msg).to.equal('Invalid Input');
           });
       });
-      it('PATCH: status code 201 and responds with the article with an incremented vote count', () => {
+      it('PATCH: status code 200 and responds with the article with an incremented vote count', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({ inc_votes: 10 })
-          .expect(201)
+          .expect(200)
           .then(res => {
             expect(res.body.article.votes).to.equal(110);
             expect(res.body.article).to.contain.keys(
@@ -288,11 +288,11 @@ describe.only('/', () => {
             );
           });
       });
-      it('PATCH: status code 201 and responds with the article with a decremented vote count', () => {
+      it('PATCH: status code 200 and responds with the article with a decremented vote count', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({ inc_votes: -10 })
-          .expect(201)
+          .expect(200)
           .then(res => {
             expect(res.body.article.votes).to.equal(90);
           });
@@ -310,7 +310,7 @@ describe.only('/', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({ inc_votes: 0 })
-          .expect(201)
+          .expect(200)
           .then(res => {
             expect(res.body.article.votes).to.equal(100);
           });
@@ -319,7 +319,7 @@ describe.only('/', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({})
-          .expect(201)
+          .expect(200)
           .then(res => {
             expect(res.body.article.votes).to.equal(100);
           });
@@ -337,25 +337,25 @@ describe.only('/', () => {
         return Promise.all(methodPromise);
       });
     });
-    describe('POST: /:article_id/comments', () => {
+    describe.only('POST: /:article_id/comments', () => {
       it('POST: status code 201 and responds with the posted comment based on the article_id', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send({ username: 'rogersop', body: 'Hello, this is a test' })
           .expect(201)
           .then(res => {
-            expect(res.body.comment.author).to.equal('rogersop');
-            expect(res.body.comment.article_id).to.equal(1);
-            expect(res.body.comment.body).to.equal('Hello, this is a test');
+            expect(res.body.comments.author).to.equal('rogersop');
+            expect(res.body.comments.article_id).to.equal(1);
+            expect(res.body.comments.body).to.equal('Hello, this is a test');
           });
       });
-      it('POST: status code 400 when invalid article id is used', () => {
+      it('POST: status code 404 when invalid article id is requested', () => {
         return request(app)
           .post('/api/articles/999/comments')
           .send({ username: 'rogersop', body: 'Hello, this is a test' })
-          .expect(400)
+          .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal('Invalid Request');
+            expect(res.body.msg).to.equal('Article 999 Not Found');
           });
       });
       it('POST: status code 400 when invalid username is used', () => {
@@ -400,9 +400,9 @@ describe.only('/', () => {
             .get('/api/articles/1/comments')
             .expect(200)
             .then(res => {
-              expect(res.body.comment[0].article_id).to.equal(1);
-              expect(res.body.comment.length).to.equal(13);
-              expect(res.body.comment[0]).to.contain.keys(
+              expect(res.body.comments[0].article_id).to.equal(1);
+              expect(res.body.comments.length).to.equal(13);
+              expect(res.body.comments[0]).to.contain.keys(
                 'comment_id',
                 'author',
                 'created_at',
@@ -416,7 +416,7 @@ describe.only('/', () => {
             .get('/api/articles/1/comments')
             .expect(200)
             .then(res => {
-              expect(res.body.comment).to.be.descendingBy('created_at');
+              expect(res.body.comments).to.be.descendingBy('created_at');
             });
         });
         it('GET: status code 200 and reponds with an array of comments for a given article ID sorted by created_at as default but is ascending order when specified', () => {
@@ -424,7 +424,7 @@ describe.only('/', () => {
             .get('/api/articles/1/comments?order=asc')
             .expect(200)
             .then(res => {
-              expect(res.body.comment).to.be.sortedBy('created_at');
+              expect(res.body.comments).to.be.sortedBy('created_at');
             });
         });
         it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specified coloumn in ascending order', () => {
@@ -432,7 +432,7 @@ describe.only('/', () => {
             .get('/api/articles/1/comments?sort_by=comment_id&order=asc')
             .expect(200)
             .then(res => {
-              expect(res.body.comment).to.be.sortedBy('comment_id');
+              expect(res.body.comments).to.be.sortedBy('comment_id');
             });
         });
         it('GET: status code 200 and responds with an array of comments for a given article ID sorted by a specific column in descending order', () => {
@@ -440,7 +440,7 @@ describe.only('/', () => {
             .get('/api/articles/1/comments?sort_by=votes&order=desc')
             .expect(200)
             .then(res => {
-              expect(res.body.comment).to.be.descendingBy('votes');
+              expect(res.body.comments).to.be.descendingBy('votes');
             });
         });
         it('GET: status code 400 when trying to sort by a column that does not exist', () => {
@@ -457,6 +457,14 @@ describe.only('/', () => {
             .expect(400)
             .then(res => {
               expect(res.body.msg).to.equal('Invalid Order Method')
+            });
+        });
+        it('GET: status code 404 when article id does not exists', () => {
+          return request(app)
+            .get('/api/articles/999/comments')
+            .expect(404)
+            .then(res => {
+              expect(res.body.msg).to.equal('Article 999 Does Not Exist')
             });
         });
         it('Invalid Method: status code 405', () => {
