@@ -6,12 +6,12 @@ const {
   handleNotFoundSqlErrors,
   handleServerErrors,
   routeNotFoundError,
-  handleSqlErrors
+  handleSqlErrors,
 } = require('./errors/index');
 
 app.use(express.json());
 
-app.use('/api', apiRouter);
+app.use('/api', apiRouter)
 
 app.use('/*', routeNotFoundError);
 
