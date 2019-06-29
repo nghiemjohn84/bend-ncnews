@@ -21,8 +21,27 @@ describe.only('/', () => {
         });
     });
   });
-
   describe('/api', () => {
+    it('GET: status code 200 and responds with a JSON object of all the available endpoints', () => {
+      return request(app)
+        .get('/api')
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.be.an('object')
+        });
+    });
+    it('Invalid Method: status code 405', () => {
+      const invalidMethods = ['patch', 'put', 'delete', 'post']
+      const methodPromise = invalidMethods.map(method => {
+        return request(app)
+        [method]('/api')
+        .expect(405)
+        .then(res => {
+          expect(res.body.msg).to.equal('Method Not Allowed')
+        });
+      });
+      return Promise.all(methodPromise)
+    });
     describe('/topics', () => {
       it('GET: status code 200 and returns an array of topic objects', () => {
         return request(app)
