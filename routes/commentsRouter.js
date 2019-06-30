@@ -1,9 +1,14 @@
 const commentsRouter = require('express').Router();
 const {
   amendedComment,
-  deleteComment
+  deleteComment,
+  sendAllComments
 } = require('../controllers/commentsController');
 const { handleMethodErrors } = require('../errors/index');
+
+
+commentsRouter.route('/')
+  .get(sendAllComments)
 
 commentsRouter
   .route('/:comment_id')

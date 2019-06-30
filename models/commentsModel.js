@@ -32,3 +32,9 @@ exports.removeComment = comment_id => {
       } else return 'Comment Deleted';
     });
 };
+
+exports.fetchAllComments = () => {
+  return connection
+    .select('*')
+    .from('comments')
+}

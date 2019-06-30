@@ -198,12 +198,12 @@ describe('/', () => {
           expect(res.body.articles).to.have.lengthOf(3);
         });
     });
-    it('GET: status code 200 and responds with an array of articles for a sepcific topic', () => {
+    it('GET: status code 200 and responds with an array of articles for a sepcific topic, displaying a limit of 10', () => {
       return request(app)
         .get('/api/articles?topic=mitch')
         .expect(200)
         .then(res => {
-          expect(res.body.articles).to.have.lengthOf(11);
+          expect(res.body.articles).to.have.lengthOf(10);
           for (let i = 0; i < res.body.articles.length; i++) {
             expect(res.body.articles[i].topic).to.equal('mitch');
           }
@@ -221,7 +221,7 @@ describe('/', () => {
           }
         });
     });
-    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 10 articles as default', () => {
+    it('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 10 articles as default', () => {
       return request(app)
         .get('/api/articles')
         .expect(200)
@@ -230,7 +230,7 @@ describe('/', () => {
           expect(res.body.articles).to.be.descendingBy('created_at')
         });
     });
-    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 5 articles as per query', () => {
+    it('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 5 articles as per query', () => {
       return request(app)
         .get('/api/articles?limit=5')
         .expect(200)
@@ -239,7 +239,7 @@ describe('/', () => {
           expect(res.body.articles).to.be.descendingBy('created_at')
         });
     });
-    it.only('GET: status code 200 and responds with an array of articles specified in the query, by limit, topic, author, order and sorted by', () => {
+    it('GET: status code 200 and responds with an array of articles specified in the query, by limit, topic, author, order and sorted by', () => {
       return request(app)
         .get('/api/articles?topic=mitch&limit=2&sort_by=title&order=asc&author=butter_bridge')
         .expect(200)
@@ -252,6 +252,15 @@ describe('/', () => {
           }
         });
     });
+    it.only('GET: status code 200 and responds with an array of articles as per query', () => {
+      return request(app)
+        .get('/api/articles?limit=5&p=2&sort_by=article_id&order=asc')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles.length).to.equal(5)
+          expect(res.body.articles[0].article_id).to.equal(6)
+        })
+    })
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
       return request(app)
         .get('/api/articles?sort_by=invalidColumn')
@@ -547,6 +556,21 @@ describe('/', () => {
     });
   });
   describe('/comments', () => {
+    it('GET: status code 200 and responds with an array of all comments', () => {
+      return request(app)
+        .get('/api/comments')
+        .expect(200)
+        .then(res => {
+          expect(res.body.comments).to.be.an('array')
+          expect(res.body.comments[0]).to.contain.keys(
+            'comment_id', 
+            'author', 
+            'article_id', 
+            'votes', 
+            'created_at', 
+            'body')
+        })
+    })
     describe('/comments/:comment_id', () => {
       it('PATCH: status code 200, returns an incremented count for a specified comment', () => {
         return request(app)
