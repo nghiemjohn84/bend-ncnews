@@ -22,6 +22,6 @@ exports.formatComments = (comments, articleRef) => {
     const article_id = articleRef[belongs_to];
     const newDate = new Date(created_at);
     created_at = newDate
-    return { article_id, author, ...restOfComments };
+    return { article_id, author, created_at, ...restOfComments };
   });
 };

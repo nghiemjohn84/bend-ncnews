@@ -7,7 +7,7 @@ const { expect } = chai;
 const chaiSorted = require('chai-sorted');
 chai.use(chaiSorted);
 
-describe.only('/', () => {
+describe('/', () => {
   after(() => connection.destroy());
   beforeEach(() => connection.seed.run());
 
@@ -28,6 +28,18 @@ describe.only('/', () => {
         .expect(200)
         .then(res => {
           expect(res.body).to.be.an('object')
+          expect(res.body).to.have.keys(
+            'GET /api',
+            'GET /api/users/:username',
+            'GET /api/topics',
+            'GET /api/articles',
+            'GET /api/articles/:article_id',
+            'PATCH /api/articles/:article:id', 
+            'POST /api/articles/:article_id/comments',
+            'GET /api/articles/:article_id/comments',
+            'PATCH /api/comments/:comment_id',
+            'DELETE /api/comments/:comment_id'
+          )
         });
     });
     it('Invalid Method: status code 405', () => {

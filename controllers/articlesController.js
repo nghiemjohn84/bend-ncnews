@@ -36,8 +36,7 @@ exports.updateArticleVote = (req, res, next) => {
 
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  const {username} = req.body;
-  const {body} = req.body;
+  const {username, body} = req.body;
   addCommentByArticleId(article_id, username, body)
     .then(comment => {
       res.status(201).send({ comment });
