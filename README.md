@@ -26,21 +26,21 @@ The API provides the means of retrieving information from specific endpoints wit
 
 # **Installing**
 
-1. In order to run the project, firstly fork the repository then clone the contents onto your local machine using the terminal commands below:
+**1.** **In order to run the project, firstly fork the repository then clone the contents onto your local machine using the terminal commands below:**
 
 ```
 $ git clone https://github.com/<your-github-username>/be-nc-news
 ```
-2. Once cloned, navigate into the cloned folder and open the the folder in your code editor:
+**2.** **Once cloned, navigate into the cloned folder and open the the folder in your code editor:**
 ```
 $ cd be-nc-news
 $ code .
 ```
-3. Install the necessary dependencies by running the following command:
+**3.** **Install the necessary dependencies by running the following command:**
 ```
 $ npm install
 ```
-4. Create a file in the root directory named knexfile.js and insert the following code below:
+**4.** **Create a file in the root directory named knexfile.js and insert the following code below:**
 
 *Please note: if you are using a Linux based system, you are required to input your postgreSQL username and password.*
 
@@ -81,14 +81,14 @@ const customConfig = {
 module.exports = { ...customConfig[ENV], ...baseConfig };
 ```
 
-5. In order to setup the databases, run the following commands in order in your terminal:
+**5.** **In order to setup the databases, run the following commands in order in your terminal:**
 ```
 $ npm run setup-dbs
 
 $ npm run seed
 ```
 
-6. Finally, the server is defaulted to run on port 9090.  All endpoints can be found locally at:
+**6.** **Finally, the server is defaulted to run on port 9090.  All endpoints can be found locally at:**
 ```
 http://localhost:9090
 ```
@@ -139,7 +139,7 @@ DELETE /api/comments/:comment_id
 Tests to ensure that a specific comment is deleted.  Responds with an error if the comment does not exist.
 
 # **Deployment**
-The app has been deployed to Heroku and will be updated regularly as the development of tha app progresses.
+The app has been deployed to Heroku and will be updated regularly as the development of the app progresses.
 
 [nc-news-jn](https://nc-news-jn.herokuapp.com/)
 

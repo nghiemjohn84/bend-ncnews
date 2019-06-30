@@ -1,4 +1,4 @@
-const { addVoteToComment, removeComment } = require('../models/commentsModel');
+const { addVoteToComment, removeComment, fetchAllComments } = require('../models/commentsModel');
 
 exports.amendedComment = (req, res, next) => {
   const increment = req.body.inc_votes;
@@ -18,3 +18,11 @@ exports.deleteComment = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.sendAllComments = (req, res, next) => {
+  fetchAllComments()
+    .then((comments) => {
+      res.status(200).send({comments})
+  })
+  .catch(next)
+}
