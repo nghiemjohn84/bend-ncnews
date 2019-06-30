@@ -139,7 +139,7 @@ DELETE /api/comments/:comment_id
 Tests to ensure that a specific comment is deleted.  Responds with an error if the comment does not exist.
 
 # **Deployment**
-The app has been deployed to Heroku and will be updated regularly as the development of tha app progresses.
+The app has been deployed to Heroku and will be updated regularly as the development of the app progresses.
 
 [nc-news-jn](https://nc-news-jn.herokuapp.com/)
 
