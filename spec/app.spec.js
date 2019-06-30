@@ -230,13 +230,26 @@ describe('/', () => {
           expect(res.body.articles).to.be.descendingBy('created_at')
         });
     });
-    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 5 articles as per querys', () => {
+    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 5 articles as per query', () => {
       return request(app)
         .get('/api/articles?limit=5')
         .expect(200)
         .then(res => {
-          expect(res.body.articles.length).to.equal(10)
+          expect(res.body.articles.length).to.equal(5)
           expect(res.body.articles).to.be.descendingBy('created_at')
+        });
+    });
+    it.only('GET: status code 200 and responds with an array of articles specified in the query, by limit, topic, author, order and sorted by', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch&limit=2&sort_by=title&order=asc&author=butter_bridge')
+        .expect(200)
+        .then(res => {
+          for(let i =0; i < res.body.articles.length; i++){
+          expect(res.body.articles.length).to.equal(2)
+          expect(res.body.articles).to.be.sortedBy('title')
+          expect(res.body.articles[i].topic).to.equal('mitch')
+          expect(res.body.articles[i].author).to.equal('butter_bridge')
+          }
         });
     });
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
