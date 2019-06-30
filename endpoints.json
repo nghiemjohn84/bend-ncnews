@@ -2,6 +2,16 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /api/users/:username": {
+    "description": "serves an object with user information",
+    "exampleResponse": {
+      "user": {
+        "username": "tickle122",
+        "avatar_url": "https://www.spiritsurfers.net/monastery/wp-content/uploads/_41500270_mrtickle.jpg",
+        "name": "Tom Tickle"
+      }
+    }
+  },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -10,8 +20,16 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
+    "queryRules": {
+      "AUTHOR": "FILTER by the username",
+      "TOPIC": "FILTER by the topic",
+      "SORT_BY": "Sort returning articles by relevent column",
+      "sort_byColumns": ["article_id", "title", "body", "votes", "topic", "author", "created_At", "comment_count"],
+      "ORDER": "Sort in either ascending or descending order",
+      "orderOptions": ["asc", "desc"]
+    },
     "exampleResponse": {
       "articles": [
         {
@@ -22,6 +40,98 @@
           "created_at": 1527695953341
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an on object for a specific article based on the aricle id",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+        "votes": 0,
+        "topic": "coding",
+        "author": "jessjelly",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "comment_count": "8"
+      }
+    }
+  },
+  "PATCH /api/articles/:article:id": {
+    "description": "serves an object containing the updated article when a vote value is passed",
+    "bodyExample": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+        "votes": 1,
+        "topic": "coding",
+        "author": "jessjelly",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "comment_count": "8"
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "serves an object with the newly added comment",
+    "bodyExample": {
+      "username": "tickle122",
+      "body": "i am a teapot"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 7,
+        "author": "tickle122",
+        "article_id": 1,
+        "votes": 0,
+        "created_at": "YYYY-MM-DD'T'HH: MM: SS.SSS'Z'",
+        "body": "i am a teapot"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array containing the comments for a specific article",
+    "exampleResponse": [
+      {
+        "comment_id": 44,
+        "author": "grumpy19",
+        "article_id": 1,
+        "votes": 4,
+        "created_at": "2017-11-20T08:58:48.322Z",
+        "body": "Error est qui id corrupti et quod enim accusantium minus. Deleniti quae ea magni officiis et qui suscipit non."
+      },
+      {
+        "comment_id": 52,
+        "author": "jessjelly",
+        "article_id": 1,
+        "votes": 10,
+        "created_at": "Consectetur deleniti sed. Omnis et dolore omnis aspernatur. Et porro accusantium. Tempora ullam voluptatum et rerum."
+      }
+    ]
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "serves an object containing the updated comment",
+    "bodyExample": {
+      "inc_votes": 2
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 44,
+        "author": "grumpy19",
+        "article_id": 1,
+        "votes": 6,
+        "created_at": "2017-11-20T08:58:48.322Z",
+        "body": "Error est qui id corrupti et quod enim accusantium minus. Deleniti quae ea magni officiis et qui suscipit non."
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a comment by the passed comment ID",
+    "exampleResponse": {
+      "status": "404"
     }
   }
 }
