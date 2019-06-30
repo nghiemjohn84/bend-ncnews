@@ -221,6 +221,24 @@ describe('/', () => {
           }
         });
     });
+    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 10 articles as default', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles.length).to.equal(10)
+          expect(res.body.articles).to.be.descendingBy('created_at')
+        });
+    });
+    it.only('GET: status code 200 and responds with an array of articles sorted by date in descending order as default and limited 5 articles as per querys', () => {
+      return request(app)
+        .get('/api/articles?limit=5')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles.length).to.equal(10)
+          expect(res.body.articles).to.be.descendingBy('created_at')
+        });
+    });
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
       return request(app)
         .get('/api/articles?sort_by=invalidColumn')
