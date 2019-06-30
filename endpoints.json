@@ -23,22 +23,35 @@
     "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
     "queryRules": {
-      "AUTHOR": "FILTER by the username",
-      "TOPIC": "FILTER by the topic",
-      "SORT_BY": "Sort returning articles by relevent column",
+      "author": "FILTER by the username",
+      "topic": "FILTER by the topic",
+      "sort_by": "Sort returning articles by relevent column",
       "sort_byColumns": ["article_id", "title", "body", "votes", "topic", "author", "created_At", "comment_count"],
-      "ORDER": "Sort in either ascending or descending order",
+      "order": "Sort in either ascending or descending order",
       "orderOptions": ["asc", "desc"]
     },
     "exampleResponse": {
       "articles": [
-        {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
-        }
+      {
+      "article_id": 28,
+      "title": "High Altitude Cooking",
+      "topic": "cooking",
+      "author": "happyamy2016",
+      "body": "Most backpacking trails vary only a few thousand feet elevation. However, many trails can be found above 10,000 feet. But what many people don’t take into consideration at these high altitudes is how these elevations affect their cooking.",
+      "created_at": "2018-05-27T03:32:28.514Z",
+      "votes": 0,
+      "comment_count": "5"
+      },
+      {
+      "article_id": 13,
+      "title": "What does Jose Mourinho's handwriting say about his personality?",
+      "topic": "football",
+      "author": "weegembump",
+      "body": "Jose Mourinho was at The O2 on Sunday night to watch Dominic Thiem in action against Novak Djokovic. Thiem took the first set before Djokovic fought back to claim the victory, but Manchester United's manager was clearly impressed with the Austrian's performance.",
+      "created_at": "2018-04-16T19:29:32.774Z",
+      "votes": 0,
+      "comment_count": "6"
+       }
       ]
     }
   },
@@ -60,18 +73,18 @@
   "PATCH /api/articles/:article:id": {
     "description": "serves an object containing the updated article when a vote value is passed",
     "bodyExample": {
-      "inc_votes": 1
+      "inc_votes": 10
     },
     "exampleResponse": {
       "article": {
-        "article_id": 1,
-        "title": "Running a Node App",
-        "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
-        "votes": 1,
-        "topic": "coding",
-        "author": "jessjelly",
-        "created_at": "2016-08-18T12:07:52.389Z",
-        "comment_count": "8"
+        "article_id": 13,
+        "title": "What does Jose Mourinho's handwriting say about his personality?",
+        "topic": "football",
+        "author": "weegembump",
+        "body": "Jose Mourinho was at The O2 on Sunday night to watch Dominic Thiem in action against Novak Djokovic. Thiem took the first set before Djokovic fought back to claim the victory, but Manchester United's manager was clearly impressed with the Austrian's performance.",
+        "created_at": "2018-04-16T19:29:32.774Z",
+        "votes": 10,
+        "comment_count": "6"
       }
     }
   },
@@ -79,7 +92,7 @@
     "description": "serves an object with the newly added comment",
     "bodyExample": {
       "username": "tickle122",
-      "body": "i am a teapot"
+      "body": "This is a comment"
     },
     "exampleResponse": {
       "comment": {
@@ -88,7 +101,7 @@
         "article_id": 1,
         "votes": 0,
         "created_at": "YYYY-MM-DD'T'HH: MM: SS.SSS'Z'",
-        "body": "i am a teapot"
+        "body": "This is a comment"
       }
     }
   },
@@ -96,19 +109,20 @@
     "description": "serves an array containing the comments for a specific article",
     "exampleResponse": [
       {
-        "comment_id": 44,
-        "author": "grumpy19",
-        "article_id": 1,
-        "votes": 4,
-        "created_at": "2017-11-20T08:58:48.322Z",
-        "body": "Error est qui id corrupti et quod enim accusantium minus. Deleniti quae ea magni officiis et qui suscipit non."
-      },
-      {
-        "comment_id": 52,
-        "author": "jessjelly",
-        "article_id": 1,
-        "votes": 10,
-        "created_at": "Consectetur deleniti sed. Omnis et dolore omnis aspernatur. Et porro accusantium. Tempora ullam voluptatum et rerum."
+        "comment_id": 31,
+      "author": "weegembump",
+      "article_id": 1,
+      "votes": 11,
+      "created_at": "2019-06-28T13:51:53.424Z",
+      "body": "Sit sequi odio suscipit. Iure quisquam qui alias distinctio eos officia enim aut sit. Corrupti ut praesentium ut iste earum itaque qui. Dolores in ab rerum consequuntur. Id ab aliquid autem dolore."
+    },
+    {
+      "comment_id": 33,
+      "author": "cooljmessy",
+      "article_id": 1,
+      "votes": 4,
+      "created_at": "2019-06-28T13:51:53.424Z",
+      "body": "Explicabo perspiciatis voluptatem sunt tenetur maxime aut. Optio totam modi. Perspiciatis et quia."
       }
     ]
   },
@@ -119,19 +133,19 @@
     },
     "exampleResponse": {
       "comment": {
-        "comment_id": 44,
-        "author": "grumpy19",
+        "comment_id": 33,
+        "author": "cooljmessy",
         "article_id": 1,
         "votes": 6,
-        "created_at": "2017-11-20T08:58:48.322Z",
-        "body": "Error est qui id corrupti et quod enim accusantium minus. Deleniti quae ea magni officiis et qui suscipit non."
+        "created_at": "2019-06-28T13:51:53.424Z",
+        "body": "Explicabo perspiciatis voluptatem sunt tenetur maxime aut. Optio totam modi. Perspiciatis et quia."
       }
     }
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "Deletes a comment by the passed comment ID",
+    "description": "deletes a comment of a specified comment ID and responds with a status of 204",
     "exampleResponse": {
-      "status": "404"
+      "status": "204"
     }
   }
 }
