@@ -7,7 +7,7 @@ const { expect } = chai;
 const chaiSorted = require('chai-sorted');
 chai.use(chaiSorted);
 
-describe('/', () => {
+describe.only('/', () => {
   after(() => connection.destroy());
   beforeEach(() => connection.seed.run());
 
@@ -252,7 +252,7 @@ describe('/', () => {
           }
         });
     });
-    it.only('GET: status code 200 and responds with an array of articles as per query', () => {
+    it('GET: status code 200 and responds with an array of articles as per query', () => {
       return request(app)
         .get('/api/articles?limit=5&p=2&sort_by=article_id&order=asc')
         .expect(200)
