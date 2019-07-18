@@ -261,6 +261,14 @@ describe.only('/', () => {
           expect(res.body.articles[0].article_id).to.equal(6)
         })
     })
+    it.only('GET: status code 200 and responds with the count of all articles', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(res => {
+          expect(res.body.articleCount[0].count).to.equal('12')
+        });
+    })  
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
       return request(app)
         .get('/api/articles?sort_by=invalidColumn')

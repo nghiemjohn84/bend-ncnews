@@ -45,6 +45,12 @@ exports.fetchAllArticles = (
     });
 };
 
+exports.fetchArticleCount = () => {
+  return connection
+  .from('articles')
+  .count('article_id')
+}
+
 exports.fetchArticleById = article_id => {
   return connection
     .first('articles.*')
