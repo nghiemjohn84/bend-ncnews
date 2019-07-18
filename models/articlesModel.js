@@ -5,7 +5,8 @@ exports.fetchAllArticles = (
   sort_by = 'created_at',
   order = 'desc',
   author,
-  topic,
+  topic, 
+  limit=10,
   p = 1 
 ) => {
   const offset = (p-1) * limit
@@ -16,7 +17,7 @@ exports.fetchAllArticles = (
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by, order)
-    // .limit(limit)
+    .limit(limit)
     .offset(offset)
     .modify(query => {
       if (author) {
