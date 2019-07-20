@@ -45,10 +45,21 @@ exports.fetchAllArticles = (
     });
 };
 
-exports.fetchArticleCount = () => {
+exports.fetchAllArticlesCount = (topic, author) => {
   return connection
-  .from('articles')
-  .count('article_id')
+    .select('*')
+    .from ('articles')
+    .modify(query => {
+      if(topic) {
+        query.where('articles.topic', topic)
+      } else if (author) {
+        query.where('articles.author', author)
+      }
+    })
+    .returning('*')
+    .then(articles => {
+      return articles.length;
+    })
 }
 
 exports.fetchArticleById = article_id => {

@@ -4,14 +4,21 @@ const {
   addVoteToArticle,
   addCommentByArticleId,
   fetchCommentsByArticleId,
-  fetchArticleCount
+  fetchAllArticlesCount
 } = require('../models/articlesModel');
 
 exports.sendAllArticles = (req, res, next) => {
   const { sort_by, order, author, topic, limit, p } = req.query;
-  Promise.all([fetchAllArticles(sort_by, order, author, topic, limit, p), fetchArticleCount()])
-    .then(([articles, articleCount]) => {
-      res.status(200).send({ articles, articleCount });
+  fetchAllArticles(sort_by, order, author, topic, limit, p)
+    .then((articles) => {
+      if(!articles) {
+        res.status(400).send([])
+      } else
+      fetchAllArticlesCount(topic, author)
+      .then (
+        allArticles => {
+          res.status(200).send({articles, total_count: allArticles})
+        })
     })
     .catch(next);
 };

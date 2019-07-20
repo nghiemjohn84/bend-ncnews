@@ -266,9 +266,25 @@ describe.only('/', () => {
         .get('/api/articles')
         .expect(200)
         .then(res => {
-          expect(res.body.articleCount[0].count).to.equal('12')
+          expect(res.body.total_count).to.equal(12)
         });
-    })  
+    }) 
+    it.only('GET: status code 200 and responds with the count of all articles', () => {
+      return request(app)
+        .get('/api/articles?topic=cats')
+        .expect(200)
+        .then(res => {
+          expect(res.body.total_count).to.equal(1)
+        });
+    })
+    it.only('GET: status code 200 and responds with the count of all articles', () => {
+      return request(app)
+        .get('/api/articles?author=butter_bridge')
+        .expect(200)
+        .then(res => {
+          expect(res.body.total_count).to.equal(3)
+        });
+    }) 
     it('GET: status code 400 and responds with an error when sorting by a column that does not exist', () => {
       return request(app)
         .get('/api/articles?sort_by=invalidColumn')
