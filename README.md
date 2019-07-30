@@ -9,14 +9,13 @@ The API provides the means of retrieving information from specific endpoints wit
 
 # **Getting started**
 
-## **Prerequisites**
+**Prerequisites**
+* Node
+* Postgres 7.11.0
 
 **Dependencies**
 * knex 0.17.6
 * PostGresQL 11
-* Node Postgres 7.11.0
-
-**Dev Dependencies**
 * Express 4.17.1
 * Chai 4.2.0
 * Chai-sorted 0.2.0
@@ -103,45 +102,20 @@ $ npm test
 ### **Testing is carried out for each route**
 ```
 GET /api/users/:username
-```
-Tests to ensure that the response is an array of all user data.  Responds with an error if the route is not found or method is not allowed.
-```
 GET /api/topics
-```
-Tests to ensure that the response is an array of all topic data.  Responds with an error if the route is not found or method is not allowed.
-```
 GET /api/articles
-```
-Tests to ensure that the response is an array of articles containing specific keys.  Also ensuring that the queries are valid and responds with data as per the query. 
-```
 GET /api/articles/:article_id
-```
-Tests to ensure that the response is specific to an article ID.  Responds with an error if the article ID is invalid or the method is not allowed.
-```
 PATCH /api/articles/:article:id
-```
-Tests to ensure that the vote property is updated for a specific article ID. Responds with an error if the article ID is invalid or the method is not allowed.
-```
 POST /api/articles/:article_id/comments
-```
-Tests to ensure that the response is that of a new comment posted for a specific article ID.  
-```
 GET /api/articles/:article_id/comments
-```
-Tests to ensure that the response is an array of comments for a specific article and is sorted by or ordered by a specific order based on a query or defualt values.
-```
 PATCH /api/comments/:comment_id
-```
-Tests to ensure that the response is that of an updated comment with changes made to their vote property.  Responds with an error if the comment does not exist.
-```
 DELETE /api/comments/:comment_id
 ```
-Tests to ensure that a specific comment is deleted.  Responds with an error if the comment does not exist.
 
 # **Deployment**
 The app has been deployed to Heroku and will be updated regularly as the development of the app progresses.
 
-[nc-news-jn](https://nc-news-jn.herokuapp.com/)
+[nc-news-jn](https://nc-news-jn.herokuapp.com/api)
 
 # **Author**
 John Nghiem 
